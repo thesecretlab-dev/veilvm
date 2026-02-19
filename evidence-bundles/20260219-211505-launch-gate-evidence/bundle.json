@@ -1,0 +1,259 @@
+{
+  "generatedAt": "2026-02-19T21:26:45.493Z",
+  "nodeUrl": "http://127.0.0.1:9660",
+  "chainId": "gbbsaboFf5jzM721wnMf82ZvZqF64a5i3xhPg4m6vhXeKmgbc",
+  "chainDiscoveryStrategy": "vm-id",
+  "runner": "docker",
+  "dockerImage": "veilvm-zkbench-evidence:local",
+  "zkbenchExec": {
+    "mode": "binary",
+    "binaryPath": "/workspace/examples/veilvm/.cache/evidence-zkbench/bin/veilvm-zkbench-linux-amd64",
+    "recoveredAfterCacheReset": false
+  },
+  "pkPath": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\zk-fixture-new\\groth16_shielded_ledger_pk.bin",
+  "discoveredChains": [
+    {
+      "id": "ZxeSzzusNxsFfwLRVkDZqJw7gv4HSRzMPtMaorr3yQrQvzUTD",
+      "name": "VEIL1771451805061",
+      "subnetID": "2AWc8cibQ5tZgTiMo9KoRaZHc3TV3pEcBRsDBr2DiMZbPNSFm9",
+      "vmID": "u9GgvekeunSwK4TPF4jj7xLsW1LKkd1Uv9VQZo2SGfrwkejsK"
+    },
+    {
+      "id": "gbbsaboFf5jzM721wnMf82ZvZqF64a5i3xhPg4m6vhXeKmgbc",
+      "name": "VEIL",
+      "subnetID": "2AWc8cibQ5tZgTiMo9KoRaZHc3TV3pEcBRsDBr2DiMZbPNSFm9",
+      "vmID": "u9GgvekeunSwK4TPF4jj7xLsW1LKkd1Uv9VQZo2SGfrwkejsK"
+    }
+  ],
+  "overallPass": true,
+  "checks": [
+    {
+      "id": "shielded-smoke",
+      "required": true,
+      "passed": true,
+      "attempts": [
+        {
+          "run": {
+            "name": "shielded-smoke",
+            "startedAt": "2026-02-19T21:15:32.248Z",
+            "endedAt": "2026-02-19T21:19:13.615Z",
+            "durationMs": 221366,
+            "exitCode": 0,
+            "signal": "",
+            "outputDir": "./zkbench-out-evidence-20260219-211505-shielded-smoke",
+            "summaryPath": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\zkbench-out-evidence-20260219-211505-shielded-smoke\\summary.json",
+            "summary": {
+              "generated_at": "2026-02-19T21:19:08Z",
+              "config": {
+                "NodeURL": "http://host.docker.internal:9660",
+                "ChainID": "gbbsaboFf5jzM721wnMf82ZvZqF64a5i3xhPg4m6vhXeKmgbc",
+                "PrivateKeyHex": "637404e6722a0e55a27fd82dcd29f3f0faa6f13d930f32f759e3b8412c4956aeee9d3919f004304c2d44dbc9121f6559fefb9b9c25daec749b0f18f605614461",
+                "RefuelPrivateKeyHex": "",
+                "ProofConfigPrivateKeyHex": "",
+                "ProverAuthorityPrivateKeyHex": "",
+                "StrictFeePreflight": false,
+                "OutputDir": "./zkbench-out-evidence-20260219-211505-shielded-smoke",
+                "ProofMode": "groth16",
+                "ProofCircuitID": "shielded-ledger-v1",
+                "Groth16PKPath": "/workspace/examples/veilvm/zk-fixture-new/groth16_shielded_ledger_pk.bin",
+                "Groth16CSCachePath": ".cache/zkbench/groth16_shielded-ledger-v1_741bbff7efd4.ccs.bin",
+                "ProofTamperMode": "",
+                "BatchSizes": [
+                  8
+                ],
+                "WindowsPerSize": 1,
+                "BatchWindowMs": 5000,
+                "ProofDeadlineMs": 10000,
+                "ProofSubmitDelayMs": 0,
+                "TimeoutMinutes": 20,
+                "GasSafetyBps": 13000,
+                "GasReserve": 250000,
+                "RefuelAmount": 5000000
+              },
+              "results": [
+                {
+                  "batch_size": 8,
+                  "windows_run": 1,
+                  "metrics_csv": "zkbench-out-evidence-20260219-211505-shielded-smoke/metrics_batch_8.csv",
+                  "summary": {
+                    "total_windows_observed": 1,
+                    "total_commits": 1,
+                    "total_reveals": 1,
+                    "total_proof_submissions": 1,
+                    "total_proof_submission_errors": 0,
+                    "total_clears": 1,
+                    "total_clear_errors": 0,
+                    "total_accepted_batches": 1,
+                    "total_rejected_batches": 0,
+                    "total_missed_proof_deadlines": 0
+                  },
+                  "batch_freeze_ms": {
+                    "p50": 0,
+                    "p95": 0,
+                    "p99": 0
+                  },
+                  "witness_build_ms": {
+                    "p50": 0,
+                    "p95": 0,
+                    "p99": 0
+                  },
+                  "proof_generation_ms": {
+                    "p50": 640,
+                    "p95": 640,
+                    "p99": 640
+                  },
+                  "proof_verification_ms": {
+                    "p50": 1,
+                    "p95": 1,
+                    "p99": 1
+                  },
+                  "block_accept_latency_ms": {
+                    "p50": 3000,
+                    "p95": 3000,
+                    "p99": 3000
+                  }
+                }
+              ]
+            },
+            "retries": 0,
+            "recoveredAfterCacheReset": false,
+            "logs": {
+              "stdout": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-211505-launch-gate-evidence\\logs\\shielded-smoke.stdout.log",
+              "stderr": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-211505-launch-gate-evidence\\logs\\shielded-smoke.stderr.log"
+            }
+          },
+          "evaluation": {
+            "pass": true,
+            "reason": "accepted=1, rejected=0, missed=0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "backup-takeover",
+      "required": true,
+      "passed": true,
+      "attempts": [
+        {
+          "run": {
+            "name": "backup-takeover-primary-fails",
+            "startedAt": "2026-02-19T21:19:13.616Z",
+            "endedAt": "2026-02-19T21:22:50.485Z",
+            "durationMs": 216869,
+            "exitCode": 1,
+            "signal": "",
+            "outputDir": "./zkbench-out-evidence-20260219-211505-backup-takeover-primary-fails",
+            "summaryPath": "",
+            "summary": null,
+            "retries": 0,
+            "recoveredAfterCacheReset": false,
+            "logs": {
+              "stdout": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-211505-launch-gate-evidence\\logs\\backup-takeover-primary-fails.stdout.log",
+              "stderr": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-211505-launch-gate-evidence\\logs\\backup-takeover-primary-fails.stderr.log"
+            },
+            "errorSnippet": "Fee preflight: planned_txs=6 max_fee=5000000 safety_bps=13000 reserve=250000 required=39250000 balance=41353038\nGroth16 CS cache: hit (.cache/zkbench/groth16_shielded-ledger-v1_741bbff7efd4.ccs.bin)\nProof mode: groth16-shielded-ledger-v1\nProver authority override: 0x00e7c0852913093eb95db39e5e0e2f2a9552e07e5c1a81a37e1bfd4fb0c2ea9e0c2d4787d8\nRunning batch size 8 (1 windows)\n\u001b[90m21:22:49\u001b[0m \u001b[33mDBG\u001b[0m constraint system solver done \u001b[36mnbConstraints=\u001b[0m176251 \u001b[36mtook=\u001b[0m222.382843\n\u001b[90m21:22:49\u001b[0m \u001b[33mDBG\u001b[0m prover done \u001b[36macceleration=\u001b[0mnone \u001b[36mbackend=\u001b[0mgroth16 \u001b[36mcurve=\u001b[0mbn254 \u001b[36mnbConstraints=\u001b[0m176251 \u001b[36mtook=\u001b[0m385.732596\n\nbench failed: submit_batch_proof execution failed: unauthorized\n"
+          },
+          "evaluation": {
+            "pass": true,
+            "reason": "primary prover rejected under backup authority gate"
+          }
+        },
+        {
+          "run": {
+            "name": "backup-takeover-backup-recovers",
+            "startedAt": "2026-02-19T21:22:50.487Z",
+            "endedAt": "2026-02-19T21:26:45.491Z",
+            "durationMs": 235004,
+            "exitCode": 0,
+            "signal": "",
+            "outputDir": "./zkbench-out-evidence-20260219-211505-backup-takeover-backup-recovers",
+            "summaryPath": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\zkbench-out-evidence-20260219-211505-backup-takeover-backup-recovers\\summary.json",
+            "summary": {
+              "generated_at": "2026-02-19T21:26:39Z",
+              "config": {
+                "NodeURL": "http://host.docker.internal:9660",
+                "ChainID": "gbbsaboFf5jzM721wnMf82ZvZqF64a5i3xhPg4m6vhXeKmgbc",
+                "PrivateKeyHex": "203206b92546a01f3f5d5aaf43da20efb17edff07bbeea12f50f3f6d6f2087caf2853ba212a1505f208134626c85bee72f7d4f76787c510a40bb1d8c814af851",
+                "RefuelPrivateKeyHex": "637404e6722a0e55a27fd82dcd29f3f0faa6f13d930f32f759e3b8412c4956aeee9d3919f004304c2d44dbc9121f6559fefb9b9c25daec749b0f18f605614461",
+                "ProofConfigPrivateKeyHex": "637404e6722a0e55a27fd82dcd29f3f0faa6f13d930f32f759e3b8412c4956aeee9d3919f004304c2d44dbc9121f6559fefb9b9c25daec749b0f18f605614461",
+                "ProverAuthorityPrivateKeyHex": "203206b92546a01f3f5d5aaf43da20efb17edff07bbeea12f50f3f6d6f2087caf2853ba212a1505f208134626c85bee72f7d4f76787c510a40bb1d8c814af851",
+                "StrictFeePreflight": false,
+                "OutputDir": "./zkbench-out-evidence-20260219-211505-backup-takeover-backup-recovers",
+                "ProofMode": "groth16",
+                "ProofCircuitID": "shielded-ledger-v1",
+                "Groth16PKPath": "/workspace/examples/veilvm/zk-fixture-new/groth16_shielded_ledger_pk.bin",
+                "Groth16CSCachePath": ".cache/zkbench/groth16_shielded-ledger-v1_741bbff7efd4.ccs.bin",
+                "ProofTamperMode": "",
+                "BatchSizes": [
+                  8
+                ],
+                "WindowsPerSize": 1,
+                "BatchWindowMs": 5000,
+                "ProofDeadlineMs": 10000,
+                "ProofSubmitDelayMs": 0,
+                "TimeoutMinutes": 20,
+                "GasSafetyBps": 10000,
+                "GasReserve": 1,
+                "RefuelAmount": 5000000
+              },
+              "results": [
+                {
+                  "batch_size": 8,
+                  "windows_run": 1,
+                  "metrics_csv": "zkbench-out-evidence-20260219-211505-backup-takeover-backup-recovers/metrics_batch_8.csv",
+                  "summary": {
+                    "total_windows_observed": 1,
+                    "total_commits": 1,
+                    "total_reveals": 1,
+                    "total_proof_submissions": 1,
+                    "total_proof_submission_errors": 0,
+                    "total_clears": 1,
+                    "total_clear_errors": 0,
+                    "total_accepted_batches": 1,
+                    "total_rejected_batches": 0,
+                    "total_missed_proof_deadlines": 0
+                  },
+                  "batch_freeze_ms": {
+                    "p50": 0,
+                    "p95": 0,
+                    "p99": 0
+                  },
+                  "witness_build_ms": {
+                    "p50": 0,
+                    "p95": 0,
+                    "p99": 0
+                  },
+                  "proof_generation_ms": {
+                    "p50": 663,
+                    "p95": 663,
+                    "p99": 663
+                  },
+                  "proof_verification_ms": {
+                    "p50": 1,
+                    "p95": 1,
+                    "p99": 1
+                  },
+                  "block_accept_latency_ms": {
+                    "p50": 5001,
+                    "p95": 5001,
+                    "p99": 5001
+                  }
+                }
+              ]
+            },
+            "retries": 0,
+            "recoveredAfterCacheReset": false,
+            "logs": {
+              "stdout": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-211505-launch-gate-evidence\\logs\\backup-takeover-backup-recovers.stdout.log",
+              "stderr": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-211505-launch-gate-evidence\\logs\\backup-takeover-backup-recovers.stderr.log"
+            }
+          },
+          "evaluation": {
+            "pass": true,
+            "reason": "accepted=1, rejected=0, missed=0"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "generatedAt": "2026-02-19T18:41:03.618Z",
+  "nodeUrl": "http://127.0.0.1:9660",
+  "chainId": "gbbsaboFf5jzM721wnMf82ZvZqF64a5i3xhPg4m6vhXeKmgbc",
+  "chainDiscoveryStrategy": "vm-id",
+  "runner": "docker",
+  "dockerImage": "veilvm-zkbench-evidence:local",
+  "zkbenchExec": {
+    "mode": "binary",
+    "binaryPath": "/workspace/examples/veilvm/.cache/evidence-zkbench/bin/veilvm-zkbench-linux-amd64",
+    "recoveredAfterCacheReset": false
+  },
+  "pkPath": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\zk-fixture-new\\groth16_shielded_ledger_pk.bin",
+  "discoveredChains": [
+    {
+      "id": "ZxeSzzusNxsFfwLRVkDZqJw7gv4HSRzMPtMaorr3yQrQvzUTD",
+      "name": "VEIL1771451805061",
+      "subnetID": "2AWc8cibQ5tZgTiMo9KoRaZHc3TV3pEcBRsDBr2DiMZbPNSFm9",
+      "vmID": "u9GgvekeunSwK4TPF4jj7xLsW1LKkd1Uv9VQZo2SGfrwkejsK"
+    },
+    {
+      "id": "gbbsaboFf5jzM721wnMf82ZvZqF64a5i3xhPg4m6vhXeKmgbc",
+      "name": "VEIL",
+      "subnetID": "2AWc8cibQ5tZgTiMo9KoRaZHc3TV3pEcBRsDBr2DiMZbPNSFm9",
+      "vmID": "u9GgvekeunSwK4TPF4jj7xLsW1LKkd1Uv9VQZo2SGfrwkejsK"
+    }
+  ],
+  "overallPass": true,
+  "checks": [
+    {
+      "id": "shielded-smoke",
+      "required": true,
+      "passed": true,
+      "attempts": [
+        {
+          "run": {
+            "name": "shielded-smoke",
+            "startedAt": "2026-02-19T18:37:17.538Z",
+            "endedAt": "2026-02-19T18:41:03.616Z",
+            "durationMs": 226078,
+            "exitCode": 0,
+            "signal": "",
+            "outputDir": "./zkbench-out-evidence-20260219-183700-shielded-smoke",
+            "summaryPath": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\zkbench-out-evidence-20260219-183700-shielded-smoke\\summary.json",
+            "summary": {
+              "generated_at": "2026-02-19T18:40:57Z",
+              "config": {
+                "NodeURL": "http://host.docker.internal:9660",
+                "ChainID": "gbbsaboFf5jzM721wnMf82ZvZqF64a5i3xhPg4m6vhXeKmgbc",
+                "PrivateKeyHex": "637404e6722a0e55a27fd82dcd29f3f0faa6f13d930f32f759e3b8412c4956aeee9d3919f004304c2d44dbc9121f6559fefb9b9c25daec749b0f18f605614461",
+                "RefuelPrivateKeyHex": "",
+                "StrictFeePreflight": false,
+                "OutputDir": "./zkbench-out-evidence-20260219-183700-shielded-smoke",
+                "ProofMode": "groth16",
+                "ProofCircuitID": "shielded-ledger-v1",
+                "Groth16PKPath": "/workspace/examples/veilvm/zk-fixture-new/groth16_shielded_ledger_pk.bin",
+                "Groth16CSCachePath": ".cache/zkbench/groth16_shielded-ledger-v1_741bbff7efd4.ccs.bin",
+                "BatchSizes": [
+                  8
+                ],
+                "WindowsPerSize": 1,
+                "BatchWindowMs": 5000,
+                "ProofDeadlineMs": 10000,
+                "TimeoutMinutes": 20,
+                "GasSafetyBps": 13000,
+                "GasReserve": 250000,
+                "RefuelAmount": 5000000
+              },
+              "results": [
+                {
+                  "batch_size": 8,
+                  "windows_run": 1,
+                  "metrics_csv": "zkbench-out-evidence-20260219-183700-shielded-smoke/metrics_batch_8.csv",
+                  "summary": {
+                    "total_windows_observed": 1,
+                    "total_commits": 1,
+                    "total_reveals": 1,
+                    "total_proof_submissions": 1,
+                    "total_proof_submission_errors": 0,
+                    "total_clears": 1,
+                    "total_clear_errors": 0,
+                    "total_accepted_batches": 1,
+                    "total_rejected_batches": 0,
+                    "total_missed_proof_deadlines": 0
+                  },
+                  "batch_freeze_ms": {
+                    "p50": 999,
+                    "p95": 999,
+                    "p99": 999
+                  },
+                  "witness_build_ms": {
+                    "p50": 0,
+                    "p95": 0,
+                    "p99": 0
+                  },
+                  "proof_generation_ms": {
+                    "p50": 968,
+                    "p95": 968,
+                    "p99": 968
+                  },
+                  "proof_verification_ms": {
+                    "p50": 1,
+                    "p95": 1,
+                    "p99": 1
+                  },
+                  "block_accept_latency_ms": {
+                    "p50": 3001,
+                    "p95": 3001,
+                    "p99": 3001
+                  }
+                }
+              ]
+            },
+            "retries": 0,
+            "recoveredAfterCacheReset": false,
+            "logs": {
+              "stdout": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-183700-launch-gate-evidence\\logs\\shielded-smoke.stdout.log",
+              "stderr": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-183700-launch-gate-evidence\\logs\\shielded-smoke.stderr.log"
+            }
+          },
+          "evaluation": {
+            "pass": true,
+            "reason": "accepted=1, rejected=0, missed=0"
+          }
+        }
+      ]
+    }
+  ]
+}

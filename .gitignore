@@ -1,0 +1,25 @@
+﻿# Build and runtime artifacts
+.cache/
+build/
+dist/
+out/
+coverage/
+logs/
+tmp/
+temp/
+
+# Local config and secrets
+.env
+.env.local
+*.key
+*.pem
+key.txt
+secrets/*.txt
+
+# Tooling artifacts
+*.log
+*.tsbuildinfo
+
+# OS files
+.DS_Store
+Thumbs.db

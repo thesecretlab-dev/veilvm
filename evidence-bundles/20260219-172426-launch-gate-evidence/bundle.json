@@ -1,0 +1,83 @@
+{
+  "generatedAt": "2026-02-19T17:24:32.130Z",
+  "nodeUrl": "http://127.0.0.1:9660",
+  "chainId": "gbbsaboFf5jzM721wnMf82ZvZqF64a5i3xhPg4m6vhXeKmgbc",
+  "runner": "docker",
+  "dockerImage": "veilvm-zkbench-evidence:local",
+  "pkPath": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\zk-fixture-new\\groth16_shielded_ledger_pk.bin",
+  "discoveredChains": [
+    {
+      "id": "ZxeSzzusNxsFfwLRVkDZqJw7gv4HSRzMPtMaorr3yQrQvzUTD",
+      "name": "VEIL1771451805061",
+      "subnetID": "2AWc8cibQ5tZgTiMo9KoRaZHc3TV3pEcBRsDBr2DiMZbPNSFm9",
+      "vmID": "u9GgvekeunSwK4TPF4jj7xLsW1LKkd1Uv9VQZo2SGfrwkejsK"
+    },
+    {
+      "id": "gbbsaboFf5jzM721wnMf82ZvZqF64a5i3xhPg4m6vhXeKmgbc",
+      "name": "VEIL",
+      "subnetID": "2AWc8cibQ5tZgTiMo9KoRaZHc3TV3pEcBRsDBr2DiMZbPNSFm9",
+      "vmID": "u9GgvekeunSwK4TPF4jj7xLsW1LKkd1Uv9VQZo2SGfrwkejsK"
+    }
+  ],
+  "overallPass": false,
+  "checks": [
+    {
+      "id": "shielded-smoke",
+      "required": true,
+      "passed": false,
+      "attempts": [
+        {
+          "run": {
+            "name": "shielded-smoke",
+            "startedAt": "2026-02-19T17:24:29.933Z",
+            "endedAt": "2026-02-19T17:24:31.130Z",
+            "durationMs": 1192,
+            "exitCode": 127,
+            "signal": "",
+            "outputDir": "./zkbench-out-evidence-20260219-172426-shielded-smoke",
+            "summaryPath": "",
+            "summary": null,
+            "logs": {
+              "stdout": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-172426-launch-gate-evidence\\logs\\shielded-smoke.stdout.log",
+              "stderr": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-172426-launch-gate-evidence\\logs\\shielded-smoke.stderr.log"
+            },
+            "errorSnippet": "\nbash: line 1: go: command not found\n"
+          },
+          "evaluation": {
+            "pass": false,
+            "reason": "process exit code 127"
+          }
+        }
+      ]
+    },
+    {
+      "id": "synthetic-negative",
+      "required": true,
+      "passed": false,
+      "attempts": [
+        {
+          "run": {
+            "name": "synthetic-negative",
+            "startedAt": "2026-02-19T17:24:31.132Z",
+            "endedAt": "2026-02-19T17:24:32.127Z",
+            "durationMs": 995,
+            "exitCode": 127,
+            "signal": "",
+            "outputDir": "./zkbench-out-evidence-20260219-172426-synthetic-negative",
+            "summaryPath": "",
+            "summary": null,
+            "logs": {
+              "stdout": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-172426-launch-gate-evidence\\logs\\synthetic-negative.stdout.log",
+              "stderr": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-172426-launch-gate-evidence\\logs\\synthetic-negative.stderr.log"
+            },
+            "errorSnippet": "\nbash: line 1: go: command not found\n"
+          },
+          "evaluation": {
+            "pass": false,
+            "reason": "process exit code 127"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+name: veilvm-local
+services:
+  node:
+    image: veilvm-node:latest
+    container_name: veilvm-node
+    environment:
+      VEIL_ZK_VERIFIER_ENABLED: "true"
+      VEIL_ZK_VERIFIER_STRICT: "true"
+      VEIL_ZK_REQUIRED_CIRCUIT_ID: "${VEIL_ZK_REQUIRED_CIRCUIT_ID:-clearhash-v1}"
+      VEIL_ZK_GROTH16_VK_PATH: "${VEIL_ZK_GROTH16_VK_PATH:-/root/.avalanchego/zk/groth16_clearhash_vk.bin}"
+    ports:
+      - "127.0.0.1:9660:9650"
+      - "127.0.0.1:9661:9651"
+    volumes:
+      - veilvm-db:/root/.avalanchego/db
+      - veilvm-staking:/root/.avalanchego/staking
+    command:
+      - ./avalanchego
+      - --network-id=local
+      - --sybil-protection-enabled=false
+      - --api-admin-enabled=false
+      - --http-host=0.0.0.0
+      - --http-allowed-hosts=localhost,127.0.0.1,host.docker.internal
+      - --plugin-dir=/root/.avalanchego/plugins
+      - --log-level=info
+      - --track-subnets=2AWc8cibQ5tZgTiMo9KoRaZHc3TV3pEcBRsDBr2DiMZbPNSFm9
+volumes:
+  veilvm-db:
+  veilvm-staking:

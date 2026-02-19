@@ -1,0 +1,10 @@
+saved_at_utc=2026-02-19T23:20:14.7970000Z
+bundle=20260219-231603-launch-gate-evidence
+bundle_path=C:\Users\Josh\hypersdk\examples\veilvm\evidence-bundles\20260219-231603-launch-gate-evidence
+bundle_json=C:\Users\Josh\hypersdk\examples\veilvm\evidence-bundles\20260219-231603-launch-gate-evidence\bundle.json
+bundle_md=C:\Users\Josh\hypersdk\examples\veilvm\evidence-bundles\20260219-231603-launch-gate-evidence\bundle.md
+overall_pass=True
+node_url=http://127.0.0.1:9660
+chain_id=gbbsaboFf5jzM721wnMf82ZvZqF64a5i3xhPg4m6vhXeKmgbc
+runner=docker
+docker_image=veilvm-zkbench-evidence:local

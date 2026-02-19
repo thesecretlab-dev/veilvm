@@ -1,0 +1,81 @@
+{
+  "generatedAt": "2026-02-19T17:22:09.311Z",
+  "nodeUrl": "http://127.0.0.1:9660",
+  "chainId": "gbbsaboFf5jzM721wnMf82ZvZqF64a5i3xhPg4m6vhXeKmgbc",
+  "pkPath": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\zk-fixture-new\\groth16_shielded_ledger_pk.bin",
+  "discoveredChains": [
+    {
+      "id": "ZxeSzzusNxsFfwLRVkDZqJw7gv4HSRzMPtMaorr3yQrQvzUTD",
+      "name": "VEIL1771451805061",
+      "subnetID": "2AWc8cibQ5tZgTiMo9KoRaZHc3TV3pEcBRsDBr2DiMZbPNSFm9",
+      "vmID": "u9GgvekeunSwK4TPF4jj7xLsW1LKkd1Uv9VQZo2SGfrwkejsK"
+    },
+    {
+      "id": "gbbsaboFf5jzM721wnMf82ZvZqF64a5i3xhPg4m6vhXeKmgbc",
+      "name": "VEIL",
+      "subnetID": "2AWc8cibQ5tZgTiMo9KoRaZHc3TV3pEcBRsDBr2DiMZbPNSFm9",
+      "vmID": "u9GgvekeunSwK4TPF4jj7xLsW1LKkd1Uv9VQZo2SGfrwkejsK"
+    }
+  ],
+  "overallPass": false,
+  "checks": [
+    {
+      "id": "shielded-smoke",
+      "required": true,
+      "passed": false,
+      "attempts": [
+        {
+          "run": {
+            "name": "shielded-smoke",
+            "startedAt": "2026-02-19T17:21:53.353Z",
+            "endedAt": "2026-02-19T17:22:08.661Z",
+            "durationMs": 15305,
+            "exitCode": 1,
+            "signal": "",
+            "outputDir": "./zkbench-out-evidence-20260219-172153-shielded-smoke",
+            "summaryPath": "",
+            "summary": null,
+            "logs": {
+              "stdout": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-172153-launch-gate-evidence\\logs\\shielded-smoke.stdout.log",
+              "stderr": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-172153-launch-gate-evidence\\logs\\shielded-smoke.stderr.log"
+            },
+            "errorSnippet": "\ngithub.com/DataDog/zstd: build constraints exclude all Go files in C:\\Users\\Josh\\go\\pkg\\mod\\github.com\\!data!dog\\zstd@v1.5.2\n# github.com/supranational/blst/bindings/go\n..\\..\\..\\go\\pkg\\mod\\github.com\\supranational\\blst@v0.3.14\\bindings\\go\\rb_tree.go:130:18: undefined: Message\n"
+          },
+          "evaluation": {
+            "pass": false,
+            "reason": "process exit code 1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "synthetic-negative",
+      "required": true,
+      "passed": false,
+      "attempts": [
+        {
+          "run": {
+            "name": "synthetic-negative",
+            "startedAt": "2026-02-19T17:22:08.663Z",
+            "endedAt": "2026-02-19T17:22:09.309Z",
+            "durationMs": 646,
+            "exitCode": 1,
+            "signal": "",
+            "outputDir": "./zkbench-out-evidence-20260219-172153-synthetic-negative",
+            "summaryPath": "",
+            "summary": null,
+            "logs": {
+              "stdout": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-172153-launch-gate-evidence\\logs\\synthetic-negative.stdout.log",
+              "stderr": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-172153-launch-gate-evidence\\logs\\synthetic-negative.stderr.log"
+            },
+            "errorSnippet": "\ngithub.com/DataDog/zstd: build constraints exclude all Go files in C:\\Users\\Josh\\go\\pkg\\mod\\github.com\\!data!dog\\zstd@v1.5.2\n# github.com/supranational/blst/bindings/go\n..\\..\\..\\go\\pkg\\mod\\github.com\\supranational\\blst@v0.3.14\\bindings\\go\\rb_tree.go:130:18: undefined: Message\n"
+          },
+          "evaluation": {
+            "pass": false,
+            "reason": "process exit code 1"
+          }
+        }
+      ]
+    }
+  ]
+}

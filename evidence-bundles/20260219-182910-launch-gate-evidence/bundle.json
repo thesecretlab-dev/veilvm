@@ -1,0 +1,80 @@
+{
+  "generatedAt": "2026-02-19T18:29:27.812Z",
+  "nodeUrl": "http://127.0.0.1:9650",
+  "chainId": "2n1YXbk3hMJbhnnxC8fb2qC8SmmPzWWNUk2CPHH5cdKKPcunYQ",
+  "chainDiscoveryStrategy": "name-fallback",
+  "runner": "docker",
+  "dockerImage": "veilvm-zkbench-evidence:local",
+  "zkbenchExec": {
+    "mode": "binary",
+    "binaryPath": "/workspace/examples/veilvm/.cache/evidence-zkbench/bin/veilvm-zkbench-linux-amd64",
+    "recoveredAfterCacheReset": false
+  },
+  "pkPath": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\zk-fixture-new\\groth16_shielded_ledger_pk.bin",
+  "discoveredChains": [
+    {
+      "id": "yWkVAbLw4rbqS4CWWf2hAfsSRNad37tRCC8xTCsXa8jz5tqkU",
+      "name": "VEILVM",
+      "subnetID": "2KAeytTU7zCvkQuxv1aN1LTB1MFMj8t55B5uQNjyC2zW3281MY",
+      "vmID": "ezfk1oPfntBVriLSVDeszVTKwhi2nwQZD44gjgaGAXxrbAm4Z"
+    },
+    {
+      "id": "2L5JWLhXnDm8dPyBFMjBuqsbPSytL4bfbGJJj37jk5ri1KdXhd",
+      "name": "VEIL2",
+      "subnetID": "hW1PX8sV3HUf7ZVLeCN5wcFAGQyypyMqfdEsUX6787MUV9maf",
+      "vmID": "ezfk1kwy1rg9i5ma3FF3BMSqRLCxt4g4xnPa5a9RfHkPDeXJr"
+    },
+    {
+      "id": "2n1YXbk3hMJbhnnxC8fb2qC8SmmPzWWNUk2CPHH5cdKKPcunYQ",
+      "name": "VEIL",
+      "subnetID": "pirneQjQHD4zdRf5xq5gnkqbByWMkPoqDBoVGFELaa8ZQXUYi",
+      "vmID": "ezfk1handXusVPxpLpf2TvDX6ZshT8BpRUtUkNn1G7zpVSTdj"
+    },
+    {
+      "id": "tnyjRKdGega2c3uXiw1CyoZFxYAWo6FFP5HH3rfugvDGrakAb",
+      "name": "VEIL",
+      "subnetID": "2sjGsWzR7dsEDXJXVqB2v5smZ7wMwXAZp4omRtEY5UuvXDm9nz",
+      "vmID": "ezfk1handXusVPxpLpf2TvDX6ZshT8BpRUtUkNn1G7zpVSTdj"
+    },
+    {
+      "id": "pg4eHMDM9JMk18rFsLptWggvue4U2HDjsizUrpE93U5MDqgdX",
+      "name": "VEIL",
+      "subnetID": "2E79P4SvWdZrcHm19f2UvtJRrTeVEqxz8k4NvwU3fabFki2v7a",
+      "vmID": "srEXiWaHuhNyGwPUi444Tu47ZEDwxTWrbQiuD7FmgSAQ6X7Dy"
+    }
+  ],
+  "overallPass": false,
+  "checks": [
+    {
+      "id": "shielded-smoke",
+      "required": true,
+      "passed": false,
+      "attempts": [
+        {
+          "run": {
+            "name": "shielded-smoke",
+            "startedAt": "2026-02-19T18:29:26.872Z",
+            "endedAt": "2026-02-19T18:29:27.811Z",
+            "durationMs": 938,
+            "exitCode": 1,
+            "signal": "",
+            "outputDir": "./zkbench-out-evidence-20260219-182910-shielded-smoke",
+            "summaryPath": "",
+            "summary": null,
+            "retries": 0,
+            "recoveredAfterCacheReset": false,
+            "logs": {
+              "stdout": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-182910-launch-gate-evidence\\logs\\shielded-smoke.stdout.log",
+              "stderr": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-182910-launch-gate-evidence\\logs\\shielded-smoke.stderr.log"
+            },
+            "errorSnippet": "\nbench failed: network: received status code: 404 404 page not found\n http://host.docker.internal:9650/ext/bc/2n1YXbk3hMJbhnnxC8fb2qC8SmmPzWWNUk2CPHH5cdKKPcunYQ/coreapi\n"
+          },
+          "evaluation": {
+            "pass": false,
+            "reason": "process exit code 1"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,282 @@
+{
+  "generatedAt": "2026-02-19T18:56:35.556Z",
+  "nodeUrl": "http://127.0.0.1:9660",
+  "chainId": "gbbsaboFf5jzM721wnMf82ZvZqF64a5i3xhPg4m6vhXeKmgbc",
+  "chainDiscoveryStrategy": "vm-id",
+  "runner": "docker",
+  "dockerImage": "veilvm-zkbench-evidence:local",
+  "zkbenchExec": {
+    "mode": "binary",
+    "binaryPath": "/workspace/examples/veilvm/.cache/evidence-zkbench/bin/veilvm-zkbench-linux-amd64",
+    "recoveredAfterCacheReset": false
+  },
+  "pkPath": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\zk-fixture-new\\groth16_shielded_ledger_pk.bin",
+  "discoveredChains": [
+    {
+      "id": "ZxeSzzusNxsFfwLRVkDZqJw7gv4HSRzMPtMaorr3yQrQvzUTD",
+      "name": "VEIL1771451805061",
+      "subnetID": "2AWc8cibQ5tZgTiMo9KoRaZHc3TV3pEcBRsDBr2DiMZbPNSFm9",
+      "vmID": "u9GgvekeunSwK4TPF4jj7xLsW1LKkd1Uv9VQZo2SGfrwkejsK"
+    },
+    {
+      "id": "gbbsaboFf5jzM721wnMf82ZvZqF64a5i3xhPg4m6vhXeKmgbc",
+      "name": "VEIL",
+      "subnetID": "2AWc8cibQ5tZgTiMo9KoRaZHc3TV3pEcBRsDBr2DiMZbPNSFm9",
+      "vmID": "u9GgvekeunSwK4TPF4jj7xLsW1LKkd1Uv9VQZo2SGfrwkejsK"
+    }
+  ],
+  "overallPass": true,
+  "checks": [
+    {
+      "id": "shielded-smoke",
+      "required": true,
+      "passed": true,
+      "attempts": [
+        {
+          "run": {
+            "name": "shielded-smoke",
+            "startedAt": "2026-02-19T18:44:57.302Z",
+            "endedAt": "2026-02-19T18:48:43.356Z",
+            "durationMs": 226054,
+            "exitCode": 0,
+            "signal": "",
+            "outputDir": "./zkbench-out-evidence-20260219-184441-shielded-smoke",
+            "summaryPath": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\zkbench-out-evidence-20260219-184441-shielded-smoke\\summary.json",
+            "summary": {
+              "generated_at": "2026-02-19T18:48:37Z",
+              "config": {
+                "NodeURL": "http://host.docker.internal:9660",
+                "ChainID": "gbbsaboFf5jzM721wnMf82ZvZqF64a5i3xhPg4m6vhXeKmgbc",
+                "PrivateKeyHex": "637404e6722a0e55a27fd82dcd29f3f0faa6f13d930f32f759e3b8412c4956aeee9d3919f004304c2d44dbc9121f6559fefb9b9c25daec749b0f18f605614461",
+                "RefuelPrivateKeyHex": "",
+                "StrictFeePreflight": false,
+                "OutputDir": "./zkbench-out-evidence-20260219-184441-shielded-smoke",
+                "ProofMode": "groth16",
+                "ProofCircuitID": "shielded-ledger-v1",
+                "Groth16PKPath": "/workspace/examples/veilvm/zk-fixture-new/groth16_shielded_ledger_pk.bin",
+                "Groth16CSCachePath": ".cache/zkbench/groth16_shielded-ledger-v1_741bbff7efd4.ccs.bin",
+                "BatchSizes": [
+                  8
+                ],
+                "WindowsPerSize": 1,
+                "BatchWindowMs": 5000,
+                "ProofDeadlineMs": 10000,
+                "TimeoutMinutes": 20,
+                "GasSafetyBps": 13000,
+                "GasReserve": 250000,
+                "RefuelAmount": 5000000
+              },
+              "results": [
+                {
+                  "batch_size": 8,
+                  "windows_run": 1,
+                  "metrics_csv": "zkbench-out-evidence-20260219-184441-shielded-smoke/metrics_batch_8.csv",
+                  "summary": {
+                    "total_windows_observed": 1,
+                    "total_commits": 1,
+                    "total_reveals": 1,
+                    "total_proof_submissions": 1,
+                    "total_proof_submission_errors": 0,
+                    "total_clears": 1,
+                    "total_clear_errors": 0,
+                    "total_accepted_batches": 1,
+                    "total_rejected_batches": 0,
+                    "total_missed_proof_deadlines": 0
+                  },
+                  "batch_freeze_ms": {
+                    "p50": 1000,
+                    "p95": 1000,
+                    "p99": 1000
+                  },
+                  "witness_build_ms": {
+                    "p50": 0,
+                    "p95": 0,
+                    "p99": 0
+                  },
+                  "proof_generation_ms": {
+                    "p50": 569,
+                    "p95": 569,
+                    "p99": 569
+                  },
+                  "proof_verification_ms": {
+                    "p50": 1,
+                    "p95": 1,
+                    "p99": 1
+                  },
+                  "block_accept_latency_ms": {
+                    "p50": 3000,
+                    "p95": 3000,
+                    "p99": 3000
+                  }
+                }
+              ]
+            },
+            "retries": 0,
+            "recoveredAfterCacheReset": false,
+            "logs": {
+              "stdout": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-184441-launch-gate-evidence\\logs\\shielded-smoke.stdout.log",
+              "stderr": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-184441-launch-gate-evidence\\logs\\shielded-smoke.stderr.log"
+            }
+          },
+          "evaluation": {
+            "pass": true,
+            "reason": "accepted=1, rejected=0, missed=0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "synthetic-negative",
+      "required": true,
+      "passed": true,
+      "attempts": [
+        {
+          "run": {
+            "name": "synthetic-negative",
+            "startedAt": "2026-02-19T18:48:43.358Z",
+            "endedAt": "2026-02-19T18:48:48.347Z",
+            "durationMs": 4989,
+            "exitCode": 1,
+            "signal": "",
+            "outputDir": "./zkbench-out-evidence-20260219-184441-synthetic-negative",
+            "summaryPath": "",
+            "summary": null,
+            "retries": 0,
+            "recoveredAfterCacheReset": false,
+            "logs": {
+              "stdout": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-184441-launch-gate-evidence\\logs\\synthetic-negative.stdout.log",
+              "stderr": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-184441-launch-gate-evidence\\logs\\synthetic-negative.stderr.log"
+            },
+            "errorSnippet": "Fee preflight: planned_txs=6 max_fee=5000000 safety_bps=13000 reserve=250000 required=39250000 balance=48015748\nProof mode: synthetic\nRunning batch size 8 (1 windows)\n\nbench failed: submit_batch_proof execution failed: proof verification failed: proof circuit mismatch\n"
+          },
+          "evaluation": {
+            "pass": true,
+            "reason": "expected fail-close proof rejection observed (non-zero exit)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "timeout-drill",
+      "required": true,
+      "passed": true,
+      "attempts": [
+        {
+          "run": {
+            "name": "timeout-drill-b8",
+            "startedAt": "2026-02-19T18:48:48.348Z",
+            "endedAt": "2026-02-19T18:52:37.781Z",
+            "durationMs": 229434,
+            "exitCode": 0,
+            "signal": "",
+            "outputDir": "./zkbench-out-evidence-20260219-184441-timeout-drill-b8",
+            "summaryPath": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\zkbench-out-evidence-20260219-184441-timeout-drill-b8\\summary.json",
+            "summary": {
+              "generated_at": "2026-02-19T18:52:32Z",
+              "config": {
+                "NodeURL": "http://host.docker.internal:9660",
+                "ChainID": "gbbsaboFf5jzM721wnMf82ZvZqF64a5i3xhPg4m6vhXeKmgbc",
+                "PrivateKeyHex": "637404e6722a0e55a27fd82dcd29f3f0faa6f13d930f32f759e3b8412c4956aeee9d3919f004304c2d44dbc9121f6559fefb9b9c25daec749b0f18f605614461",
+                "RefuelPrivateKeyHex": "",
+                "StrictFeePreflight": false,
+                "OutputDir": "./zkbench-out-evidence-20260219-184441-timeout-drill-b8",
+                "ProofMode": "groth16",
+                "ProofCircuitID": "shielded-ledger-v1",
+                "Groth16PKPath": "/workspace/examples/veilvm/zk-fixture-new/groth16_shielded_ledger_pk.bin",
+                "Groth16CSCachePath": ".cache/zkbench/groth16_shielded-ledger-v1_741bbff7efd4.ccs.bin",
+                "BatchSizes": [
+                  8
+                ],
+                "WindowsPerSize": 1,
+                "BatchWindowMs": 1,
+                "ProofDeadlineMs": 1001,
+                "TimeoutMinutes": 10,
+                "GasSafetyBps": 13000,
+                "GasReserve": 250000,
+                "RefuelAmount": 5000000
+              },
+              "results": [
+                {
+                  "batch_size": 8,
+                  "windows_run": 1,
+                  "metrics_csv": "zkbench-out-evidence-20260219-184441-timeout-drill-b8/metrics_batch_8.csv",
+                  "summary": {
+                    "total_windows_observed": 1,
+                    "total_commits": 1,
+                    "total_reveals": 1,
+                    "total_proof_submissions": 1,
+                    "total_proof_submission_errors": 0,
+                    "total_clears": 1,
+                    "total_clear_errors": 0,
+                    "total_accepted_batches": 1,
+                    "total_rejected_batches": 0,
+                    "total_missed_proof_deadlines": 0
+                  },
+                  "batch_freeze_ms": {
+                    "p50": 1000,
+                    "p95": 1000,
+                    "p99": 1000
+                  },
+                  "witness_build_ms": {
+                    "p50": 0,
+                    "p95": 0,
+                    "p99": 0
+                  },
+                  "proof_generation_ms": {
+                    "p50": 662,
+                    "p95": 662,
+                    "p99": 662
+                  },
+                  "proof_verification_ms": {
+                    "p50": 1,
+                    "p95": 1,
+                    "p99": 1
+                  },
+                  "block_accept_latency_ms": {
+                    "p50": 1999,
+                    "p95": 1999,
+                    "p99": 1999
+                  }
+                }
+              ]
+            },
+            "retries": 0,
+            "recoveredAfterCacheReset": false,
+            "logs": {
+              "stdout": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-184441-launch-gate-evidence\\logs\\timeout-drill-b8.stdout.log",
+              "stderr": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-184441-launch-gate-evidence\\logs\\timeout-drill-b8.stderr.log"
+            }
+          },
+          "evaluation": {
+            "pass": false,
+            "reason": "no missed deadline or rejection observed"
+          }
+        },
+        {
+          "run": {
+            "name": "timeout-drill-b32",
+            "startedAt": "2026-02-19T18:52:37.784Z",
+            "endedAt": "2026-02-19T18:56:35.555Z",
+            "durationMs": 237771,
+            "exitCode": 1,
+            "signal": "",
+            "outputDir": "./zkbench-out-evidence-20260219-184441-timeout-drill-b32",
+            "summaryPath": "",
+            "summary": null,
+            "retries": 0,
+            "recoveredAfterCacheReset": false,
+            "logs": {
+              "stdout": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-184441-launch-gate-evidence\\logs\\timeout-drill-b32.stdout.log",
+              "stderr": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-184441-launch-gate-evidence\\logs\\timeout-drill-b32.stderr.log"
+            },
+            "errorSnippet": "Fee preflight: planned_txs=6 max_fee=5000000 safety_bps=13000 reserve=250000 required=39250000 balance=46552146\nGroth16 CS cache: hit (.cache/zkbench/groth16_shielded-ledger-v1_741bbff7efd4.ccs.bin)\nProof mode: groth16-shielded-ledger-v1\nRunning batch size 32 (1 windows)\n\u001b[90m18:56:33\u001b[0m \u001b[33mDBG\u001b[0m constraint system solver done \u001b[36mnbConstraints=\u001b[0m176251 \u001b[36mtook=\u001b[0m956.726235\n\u001b[90m18:56:34\u001b[0m \u001b[33mDBG\u001b[0m prover done \u001b[36macceleration=\u001b[0mnone \u001b[36mbackend=\u001b[0mgroth16 \u001b[36mcurve=\u001b[0mbn254 \u001b[36mnbConstraints=\u001b[0m176251 \u001b[36mtook=\u001b[0m659.613255\n\nbench failed: submit_batch_proof execution failed: proof deadline missed\n"
+          },
+          "evaluation": {
+            "pass": true,
+            "reason": "expected timeout/deadline failure observed (non-zero exit)"
+          }
+        }
+      ]
+    }
+  ]
+}

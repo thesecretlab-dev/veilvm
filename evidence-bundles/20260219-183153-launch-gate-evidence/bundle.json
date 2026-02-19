@@ -1,0 +1,62 @@
+{
+  "generatedAt": "2026-02-19T18:35:54.482Z",
+  "nodeUrl": "http://127.0.0.1:9660",
+  "chainId": "gbbsaboFf5jzM721wnMf82ZvZqF64a5i3xhPg4m6vhXeKmgbc",
+  "chainDiscoveryStrategy": "vm-id",
+  "runner": "docker",
+  "dockerImage": "veilvm-zkbench-evidence:local",
+  "zkbenchExec": {
+    "mode": "binary",
+    "binaryPath": "/workspace/examples/veilvm/.cache/evidence-zkbench/bin/veilvm-zkbench-linux-amd64",
+    "recoveredAfterCacheReset": false
+  },
+  "pkPath": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\zk-fixture-new\\groth16_shielded_ledger_pk.bin",
+  "discoveredChains": [
+    {
+      "id": "ZxeSzzusNxsFfwLRVkDZqJw7gv4HSRzMPtMaorr3yQrQvzUTD",
+      "name": "VEIL1771451805061",
+      "subnetID": "2AWc8cibQ5tZgTiMo9KoRaZHc3TV3pEcBRsDBr2DiMZbPNSFm9",
+      "vmID": "u9GgvekeunSwK4TPF4jj7xLsW1LKkd1Uv9VQZo2SGfrwkejsK"
+    },
+    {
+      "id": "gbbsaboFf5jzM721wnMf82ZvZqF64a5i3xhPg4m6vhXeKmgbc",
+      "name": "VEIL",
+      "subnetID": "2AWc8cibQ5tZgTiMo9KoRaZHc3TV3pEcBRsDBr2DiMZbPNSFm9",
+      "vmID": "u9GgvekeunSwK4TPF4jj7xLsW1LKkd1Uv9VQZo2SGfrwkejsK"
+    }
+  ],
+  "overallPass": false,
+  "checks": [
+    {
+      "id": "shielded-smoke",
+      "required": true,
+      "passed": false,
+      "attempts": [
+        {
+          "run": {
+            "name": "shielded-smoke",
+            "startedAt": "2026-02-19T18:32:09.435Z",
+            "endedAt": "2026-02-19T18:35:54.480Z",
+            "durationMs": 225045,
+            "exitCode": 1,
+            "signal": "",
+            "outputDir": "./zkbench-out-evidence-20260219-183153-shielded-smoke",
+            "summaryPath": "",
+            "summary": null,
+            "retries": 0,
+            "recoveredAfterCacheReset": false,
+            "logs": {
+              "stdout": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-183153-launch-gate-evidence\\logs\\shielded-smoke.stdout.log",
+              "stderr": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-183153-launch-gate-evidence\\logs\\shielded-smoke.stderr.log"
+            },
+            "errorSnippet": "Fee preflight: planned_txs=6 max_fee=5000000 safety_bps=13000 reserve=250000 required=39250000 balance=49549950\nGroth16 CS cache: miss (.cache/zkbench/groth16_shielded-ledger-v1_741bbff7efd4.ccs.bin): open .cache/zkbench/groth16_shielded-ledger-v1_741bbff7efd4.ccs.bin: no such file or directory\n\u001b[90m18:32:10\u001b[0m \u001b[32mINF\u001b[0m compiling circuit\n\u001b[90m18:32:10\u001b[0m \u001b[32mINF\u001b[0m parsed circuit inputs \u001b[36mnbPublic=\u001b[0m32 \u001b[36mnbSecret=\u001b[0m113\n\u001b[90m18:32:11\u001b[0m \u001b[32mINF\u001b[0m building constraint builder \u001b[36mnbConstraints=\u001b[0m176251\nGroth16 CS compile complete in 1.267s\nGroth16 CS cache: saved (.cache/zkbench/groth16_shielded-ledger-v1_741bbff7efd4.ccs.bin)\nProof mode: groth16-shielded-ledger-v1\nRunning batch size 8 (1 windows)\n\u001b[90m18:35:52\u001b[0m \u001b[33mDBG\u001b[0m constraint system solver done \u001b[36mnbConstraints=\u001b[0m176251 \u001b[36mtook=\u001b[0m169.73595\n\u001b[90m18:35:53\u001b[0m \u001b[33mDBG\u001b[0m prover done \u001b[36macceleration=\u001b[0mnone \u001b[36mbackend=\u001b[0mgroth16 \u001b[36mcurve=\u001b[0mbn254 \u001b[36mnbConstraints=\u001b[0m176251 \u001b[36mtook=\u001b[0m432.02188\n\nbench failed: submit_batch_proof execution failed: proof verification failed: proof circuit mismatch\n"
+          },
+          "evaluation": {
+            "pass": false,
+            "reason": "process exit code 1"
+          }
+        }
+      ]
+    }
+  ]
+}

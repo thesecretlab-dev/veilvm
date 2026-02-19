@@ -1,0 +1,31 @@
+# Multi-stage: build veilvm, then run inside AvalancheGo
+# Use bookworm builder, static-link to avoid glibc mismatch with runtime
+FROM golang:1.23.7-bookworm AS builder
+
+RUN apt-get update && apt-get install -y gcc g++ make musl-tools && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /hypersdk
+COPY . /hypersdk/
+
+WORKDIR /hypersdk/examples/veilvm
+RUN go mod tidy
+ENV CC=musl-gcc
+RUN CGO_ENABLED=1 go build -v -ldflags='-linkmode external -extldflags "-static"' -o /build/veilvm ./cmd/veilvm/
+RUN CGO_ENABLED=1 go build -v -ldflags='-linkmode external -extldflags "-static"' -o /build/veilvm-keygen ./cmd/veilvm-keygen/
+RUN CGO_ENABLED=1 go build -v -ldflags='-linkmode external -extldflags "-static"' -o /build/veilvm-smoke ./cmd/veilvm-smoke/
+
+# Runtime: AvalancheGo with veilvm plugin
+FROM avaplatform/avalanchego:v1.12.2
+
+# Copy veilvm binary as plugin (named by VM ID)
+COPY --from=builder /build/veilvm /root/.avalanchego/plugins/u9GgvekeunSwK4TPF4jj7xLsW1LKkd1Uv9VQZo2SGfrwkejsK
+RUN chmod +x /root/.avalanchego/plugins/u9GgvekeunSwK4TPF4jj7xLsW1LKkd1Uv9VQZo2SGfrwkejsK
+
+# Copy keygen tool
+COPY --from=builder /build/veilvm-keygen /usr/local/bin/veilvm-keygen
+COPY --from=builder /build/veilvm-smoke /usr/local/bin/veilvm-smoke
+
+# Copy genesis
+COPY examples/veilvm/genesis.json /root/genesis.json
+RUN mkdir -p /root/.avalanchego/zk
+COPY examples/veilvm/zk-fixture-new/groth16_*_vk.bin /root/.avalanchego/zk/

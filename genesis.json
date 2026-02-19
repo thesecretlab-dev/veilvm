@@ -1,0 +1,75 @@
+{
+  "stateBranchFactor": 16,
+  "customAllocation": [
+    {
+      "address": "0x0014e7b4d411d05bc745f3a3d43328171ddffab3693f1bcc95dc63a84440366e50b1cb1a38",
+      "balance": 49549950
+    }
+  ],
+  "tokenomics": {
+    "totalSupply": 990999000,
+    "governance": "0x0014e7b4d411d05bc745f3a3d43328171ddffab3693f1bcc95dc63a84440366e50b1cb1a38",
+    "operations": "0x0014e7b4d411d05bc745f3a3d43328171ddffab3693f1bcc95dc63a84440366e50b1cb1a38",
+    "mintAuthority": "0x0014e7b4d411d05bc745f3a3d43328171ddffab3693f1bcc95dc63a84440366e50b1cb1a38",
+    "colVaultLocked": 900000000,
+    "colVaultLive": 41449050,
+    "maxReleaseBips": 15,
+    "releaseEpochSeconds": 86400,
+    "feeRouterMsrbBips": 7000,
+    "feeRouterColBips": 2000,
+    "feeRouterOpsBips": 1000,
+    "vaiDebtCeiling": 2000000,
+    "vaiEpochMintLimit": 100000,
+    "vaiMintEpochSeconds": 3600,
+    "requireBatchProof": true,
+    "requiredProofType": 1,
+    "batchWindowMs": 5000,
+    "proofDeadlineMs": 10000,
+    "proverAuthority": "0x0014e7b4d411d05bc745f3a3d43328171ddffab3693f1bcc95dc63a84440366e50b1cb1a38"
+  },
+  "initialRules": {
+    "networkID": 0,
+    "chainID": "11111111111111111111111111111111LpoYY",
+    "minBlockGap": 100,
+    "minEmptyBlockGap": 500,
+    "minUnitPrice": {
+      "bandwidth": 100,
+      "compute": 100,
+      "storageRead": 100,
+      "storageAllocate": 100,
+      "storageWrite": 100
+    },
+    "unitPriceChangeDenominator": {
+      "bandwidth": 48,
+      "compute": 48,
+      "storageRead": 48,
+      "storageAllocate": 48,
+      "storageWrite": 48
+    },
+    "windowTargetUnits": {
+      "bandwidth": 9007199254740991,
+      "compute": 9007199254740991,
+      "storageRead": 9007199254740991,
+      "storageAllocate": 9007199254740991,
+      "storageWrite": 9007199254740991
+    },
+    "maxBlockUnits": {
+      "bandwidth": 1800000,
+      "compute": 9007199254740991,
+      "storageRead": 9007199254740991,
+      "storageAllocate": 9007199254740991,
+      "storageWrite": 9007199254740991
+    },
+    "validityWindow": 120000,
+    "maxActionsPerTx": 16,
+    "maxOutputsPerAction": 1,
+    "baseUnits": 1,
+    "storageKeyReadUnits": 5,
+    "storageValueReadUnits": 2,
+    "storageKeyAllocateUnits": 20,
+    "storageValueAllocateUnits": 5,
+    "storageKeyWriteUnits": 10,
+    "storageValueWriteUnits": 3,
+    "sponsorStateKeysMaxChunks": [1]
+  }
+}

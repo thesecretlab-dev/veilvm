@@ -1,0 +1,83 @@
+{
+  "generatedAt": "2026-02-19T17:36:20.012Z",
+  "nodeUrl": "http://127.0.0.1:9660",
+  "chainId": "gbbsaboFf5jzM721wnMf82ZvZqF64a5i3xhPg4m6vhXeKmgbc",
+  "runner": "docker",
+  "dockerImage": "veilvm-zkbench-evidence:local",
+  "pkPath": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\zk-fixture-new\\groth16_shielded_ledger_pk.bin",
+  "discoveredChains": [
+    {
+      "id": "ZxeSzzusNxsFfwLRVkDZqJw7gv4HSRzMPtMaorr3yQrQvzUTD",
+      "name": "VEIL1771451805061",
+      "subnetID": "2AWc8cibQ5tZgTiMo9KoRaZHc3TV3pEcBRsDBr2DiMZbPNSFm9",
+      "vmID": "u9GgvekeunSwK4TPF4jj7xLsW1LKkd1Uv9VQZo2SGfrwkejsK"
+    },
+    {
+      "id": "gbbsaboFf5jzM721wnMf82ZvZqF64a5i3xhPg4m6vhXeKmgbc",
+      "name": "VEIL",
+      "subnetID": "2AWc8cibQ5tZgTiMo9KoRaZHc3TV3pEcBRsDBr2DiMZbPNSFm9",
+      "vmID": "u9GgvekeunSwK4TPF4jj7xLsW1LKkd1Uv9VQZo2SGfrwkejsK"
+    }
+  ],
+  "overallPass": false,
+  "checks": [
+    {
+      "id": "shielded-smoke",
+      "required": true,
+      "passed": false,
+      "attempts": [
+        {
+          "run": {
+            "name": "shielded-smoke",
+            "startedAt": "2026-02-19T17:35:28.634Z",
+            "endedAt": "2026-02-19T17:35:43.853Z",
+            "durationMs": 15218,
+            "exitCode": 1,
+            "signal": "",
+            "outputDir": "./zkbench-out-evidence-20260219-173528-shielded-smoke",
+            "summaryPath": "",
+            "summary": null,
+            "logs": {
+              "stdout": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-173528-launch-gate-evidence\\logs\\shielded-smoke.stdout.log",
+              "stderr": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-173528-launch-gate-evidence\\logs\\shielded-smoke.stderr.log"
+            },
+            "errorSnippet": "\n/go/pkg/mod/github.com/prometheus/client_golang@v1.16.0/prometheus/desc.go:21:2: stat /go/pkg/mod/cache/download/github.com/cespare/xxhash/v2/@v/v2.3.0.partial: cannot allocate memory\n"
+          },
+          "evaluation": {
+            "pass": false,
+            "reason": "process exit code 1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "synthetic-negative",
+      "required": true,
+      "passed": true,
+      "attempts": [
+        {
+          "run": {
+            "name": "synthetic-negative",
+            "startedAt": "2026-02-19T17:35:43.855Z",
+            "endedAt": "2026-02-19T17:36:20.011Z",
+            "durationMs": 36156,
+            "exitCode": 1,
+            "signal": "",
+            "outputDir": "./zkbench-out-evidence-20260219-173528-synthetic-negative",
+            "summaryPath": "",
+            "summary": null,
+            "logs": {
+              "stdout": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-173528-launch-gate-evidence\\logs\\synthetic-negative.stdout.log",
+              "stderr": "C:\\Users\\Josh\\hypersdk\\examples\\veilvm\\evidence-bundles\\20260219-173528-launch-gate-evidence\\logs\\synthetic-negative.stderr.log"
+            },
+            "errorSnippet": "Fee preflight: planned_txs=6 max_fee=5000000 safety_bps=13000 reserve=250000 required=39250000 balance=44033242\nProof mode: synthetic\nRunning batch size 8 (1 windows)\n\nbench failed: submit_batch_proof execution failed: proof verification failed: proof circuit mismatch\nexit status 1\n"
+          },
+          "evaluation": {
+            "pass": true,
+            "reason": "expected fail-close proof rejection observed (non-zero exit)"
+          }
+        }
+      ]
+    }
+  ]
+}
