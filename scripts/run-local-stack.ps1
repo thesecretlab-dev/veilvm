@@ -119,15 +119,29 @@ if (-not $anvilUp) {
   Start-Sleep -Seconds 2
 }
 
-$routerUp = $false
-try { Invoke-RestMethod "http://127.0.0.1:9098/health" | Out-Null; $routerUp = $true } catch {}
-if (-not $routerUp) {
+$env:ORDER_MARKETS_PATH = Join-Path $Local "native-markets.json"
+$routerOk = $false
+try {
+  $h = Invoke-RestMethod "http://127.0.0.1:9098/health"
+  $routerOk = [bool]$h.ok
+  try { Invoke-RestMethod "http://127.0.0.1:9098/markets" | Out-Null } catch { $routerOk = $false }
+} catch {}
+if (-not $routerOk) {
   Write-Host "starting order-router"
-  Start-Process -FilePath $Router -WindowStyle Hidden
+  Get-Process veilvm-order-router -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+  Start-Sleep -Seconds 1
+  Start-Process -FilePath $Router -WorkingDirectory $Root -WindowStyle Hidden
   Wait-Http "http://127.0.0.1:9098/health" 20
 }
-
-$env:ORDER_MARKETS_PATH = Join-Path $Local "native-markets.json"
+try {
+  $listed = Invoke-RestMethod "http://127.0.0.1:9098/markets"
+  $n = @($listed.markets).Count
+} catch { $n = 0 }
+if ($n -lt 1) {
+  Write-Host "seeding native market"
+  $headers = @{ "content-type" = "application/json"; "x-relay-secret" = $env:ORDER_ROUTER_RELAY_SECRET }
+  Invoke-RestMethod -Uri "http://127.0.0.1:9098/native/create-market" -Method Post -Headers $headers -Body '{"question":"VEIL local native market","outcomes":2,"creatorBond":1}' | Out-Null
+}
 Write-Host "stack up: veilvm :9660  anvil :8545  router :9098"
 Write-Host "native UX: POST /orders  GET /markets  (frontend VEIL_ORDER_API_BASE=http://127.0.0.1:9098)"
 if ($SkipTests) { return }
