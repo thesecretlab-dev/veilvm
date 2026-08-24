@@ -40,10 +40,12 @@ type router struct {
 	requireEnv  bool
 	evmIngress  bool
 
-	mu     sync.Mutex
-	seen   map[string]string
-	core   *jsonrpc.JSONRPCClient
-	idx    *indexer.Client
+	mu          sync.Mutex
+	seen        map[string]string
+	markets     map[string]marketRec
+	marketsFile string
+	core        *jsonrpc.JSONRPCClient
+	idx         *indexer.Client
 }
 
 type intentReq struct {
@@ -120,13 +122,18 @@ func main() {
 		requireEnv:  envBool("ORDER_ROUTER_REQUIRE_OPAQUE_ENVELOPE", true),
 		evmIngress:  envBool("ORDER_ROUTER_ENABLE_EVM_INGRESS", true),
 		seen:        map[string]string{},
+		markets:     map[string]marketRec{},
+		marketsFile: envOr("ORDER_MARKETS_PATH", ""),
 		core:        jsonrpc.NewJSONRPCClient(base),
 		idx:         indexer.NewClient(base),
 	}
+	r.loadMarkets()
 	mux := http.NewServeMux()
 	mux.HandleFunc("/health", func(w http.ResponseWriter, _ *http.Request) {
-		writeJSON(w, 200, map[string]any{"ok": true, "chainId": chainID})
+		writeJSON(w, 200, map[string]any{"ok": true, "chainId": chainID, "markets": len(r.listMarkets())})
 	})
+	mux.HandleFunc("/markets", r.handleMarkets)
+	mux.HandleFunc("/orders", r.wrap(r.handleUXOrder, false))
 	mux.HandleFunc("/evm/intents/execute", r.wrap(r.handleOrder, true))
 	mux.HandleFunc("/evm/liquidity/execute", r.wrap(r.handleLiq, true))
 	mux.HandleFunc("/intents/native/execute", r.wrap(r.handleOrder, false))
@@ -148,7 +155,7 @@ func (r *router) wrap(fn func(http.ResponseWriter, *http.Request) error, evm boo
 			writeJSON(w, 403, reply{Error: "evm ingress disabled"})
 			return
 		}
-		if req.Header.Get("x-relay-secret") != r.secret {
+		if !r.authorized(req) {
 			writeJSON(w, 401, reply{Error: "unauthorized"})
 			return
 		}
@@ -297,7 +304,9 @@ func (r *router) handleCreateMarket(w http.ResponseWriter, req *http.Request) er
 	if err != nil {
 		return err
 	}
-	writeJSON(w, 200, reply{Accepted: true, VeilTxHash: txID, MarketID: marketID.String()})
+	id := marketID.String()
+	r.rememberMarket(marketRec{MarketID: id, Question: string(q), CreatedAt: time.Now().UTC().Format(time.RFC3339), LastTx: txID, Source: "VEIL native"})
+	writeJSON(w, 200, reply{Accepted: true, VeilTxHash: txID, MarketID: id})
 	return nil
 }
 

@@ -127,7 +127,9 @@ if (-not $routerUp) {
   Wait-Http "http://127.0.0.1:9098/health" 20
 }
 
+$env:ORDER_MARKETS_PATH = Join-Path $Local "native-markets.json"
 Write-Host "stack up: veilvm :9660  anvil :8545  router :9098"
+Write-Host "native UX: POST /orders  GET /markets  (frontend VEIL_ORDER_API_BASE=http://127.0.0.1:9098)"
 if ($SkipTests) { return }
 
 Write-Host "`n=== native AMM smoke ==="

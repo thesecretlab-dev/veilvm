@@ -15,6 +15,7 @@
         "check:companion-policy": "node check-companion-primitives.mjs",
         "relay:opaque": "node relay-opaque-intents.mjs",
         "e2e:local-stack": "node local-stack-e2e.mjs",
+        "e2e:top-to-bottom": "node top-to-bottom.mjs",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "keywords": [],
