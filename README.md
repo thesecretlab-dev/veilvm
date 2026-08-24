@@ -34,6 +34,8 @@ EVM-based chains leak information. Order flow is visible in the mempool, trade s
 | 17 | `SubmitBatchProof` | Submit ZK proof + Vellum proof blob |
 | 18 | `SetProofConfig` | Governance proof requirements |
 
+**v1 is these 19 actions.** IDs 19–41 in older ANIMA/handshake docs are spec-only and are not in this binary. Public copy must say 19, not 22/41/42. See `veil-docs/architecture/VEIL_STACK.md`.
+
 ## ZK Proof Pipeline
 
 ```
