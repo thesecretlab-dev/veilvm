@@ -1,0 +1,13 @@
+﻿date=2026-08-24
+host=Justin-PC
+go=go version go1.26.7 windows/amd64
+gcc=gcc.exe (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r4) 16.1.0
+mingw=C:\Users\Justin\tools\mingw64\bin
+cgo=1
+node=MISSING
+docker=MISSING
+forge=MISSING
+platform-cli=MISSING (avalanche-cli source at C:\Users\Justin\src\avalanche-cli)
+veilvm_build=PASS go build ./...
+canonical_tag=veilvm-canonical-2026-08-24
+canonical_sha=b11da50dff9e95e91048d5bbff119e64e07c1bdb
