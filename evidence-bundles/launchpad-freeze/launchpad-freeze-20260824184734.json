@@ -1,0 +1,26 @@
+{
+  "id": "D01",
+  "timestamp": "2026-08-24T18:47:34.405Z",
+  "totalSupply": 990999000,
+  "buckets": {
+    "circulating": 49549950,
+    "colVaultLocked": 900000000,
+    "colVaultLive": 41449050
+  },
+  "bucketSum": 990999000,
+  "feeRouterBips": {
+    "msrb": 7000,
+    "col": 2000,
+    "ops": 1000,
+    "sum": 10000
+  },
+  "keep3r": {
+    "allocated": false,
+    "bips": 0,
+    "amount": 0,
+    "note": "Dropped 2026-08-24. Not a v1 genesis bucket. VeilKeep3r.sol stays parked. Cadence is relayer + operator, not a keeper market."
+  },
+  "placeholderChainID": "11111111111111111111111111111111LpoYY",
+  "pass": true,
+  "errors": []
+}

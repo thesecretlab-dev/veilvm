@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
  * D01: freeze genesis buckets. Fail if they do not sum to TOTAL_SUPPLY.
- * Named sub-buckets (Keep3r 2%, ops, staking) are reservations from circulating,
- * not extra mint.
+ * v1 buckets: circulating + COL locked + COL live.
+ * Keep3r is not a bucket and not a reservation.
  */
 import { readFileSync, mkdirSync, writeFileSync } from "fs";
 import { dirname, resolve } from "path";
@@ -13,14 +13,12 @@ const root = resolve(here, "..");
 const genesis = JSON.parse(readFileSync(resolve(root, "genesis.json"), "utf8"));
 
 const TOTAL = 990_999_000;
-const KEEP3R_BIPS = 200; // 2.0%
 
 const circulating = (genesis.customAllocation || []).reduce((s, a) => s + Number(a.balance), 0);
 const colLocked = Number(genesis.tokenomics.colVaultLocked);
 const colLive = Number(genesis.tokenomics.colVaultLive);
 const totalSupply = Number(genesis.tokenomics.totalSupply);
 const sum = circulating + colLocked + colLive;
-const keep3r = Math.floor((TOTAL * KEEP3R_BIPS) / 10_000);
 const feeSum =
   Number(genesis.tokenomics.feeRouterMsrbBips) +
   Number(genesis.tokenomics.feeRouterColBips) +
@@ -30,10 +28,6 @@ const errors = [];
 if (totalSupply !== TOTAL) errors.push(`tokenomics.totalSupply ${totalSupply} != ${TOTAL}`);
 if (sum !== TOTAL) errors.push(`buckets sum ${sum} != ${TOTAL}`);
 if (feeSum !== 10_000) errors.push(`fee router bips ${feeSum} != 10000`);
-if (keep3r > circulating) errors.push(`Keep3r 2% ${keep3r} does not fit in circulating ${circulating}`);
-if (genesis.initialRules?.chainID === "11111111111111111111111111111111LpoYY") {
-  // recorded, not an error for local/D01; Phase E rewrites this
-}
 
 const report = {
   id: "D01",
@@ -51,10 +45,11 @@ const report = {
     ops: genesis.tokenomics.feeRouterOpsBips,
     sum: feeSum,
   },
-  reservationsFromCirculating: {
-    keep3r2pct: keep3r,
-    remainderAfterKeep3r: circulating - keep3r,
-    note: "Keep3r/ops/staking/ecosystem are named cuts of circulating. They are not additional mint. Addresses assigned at Fuji genesis (Phase E), not here.",
+  keep3r: {
+    allocated: false,
+    bips: 0,
+    amount: 0,
+    note: "Dropped 2026-08-24. Not a v1 genesis bucket. VeilKeep3r.sol stays parked. Cadence is relayer + operator, not a keeper market.",
   },
   placeholderChainID: genesis.initialRules?.chainID,
   pass: errors.length === 0,
