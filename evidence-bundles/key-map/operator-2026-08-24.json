@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-08-24T13:14:58Z",
+  "custody": "C:\\Users\\Justin\\tools\\veil-keybox\\private (ACL: this user only). Not in git.",
+  "warning": "Private keys are not in this file. Lost owner 0xB9a05AFC8eff7eE6a84889Bb9C88A89eAA2f96af remains do-not-deploy-under.",
+  "roles": [
+    {
+      "role": "pchain-operator",
+      "kind": "secp256k1",
+      "evm": "0x6c610253a7ce49e05068c7a538543ea5a523b85d",
+      "pFuji": "P-fuji1pmarawpzwqudh20zzc9s8w7u5krqz2axjt4399",
+      "pMainnet": "P-avax1pmarawpzwqudh20zzc9s8w7u5krqz2ax7e3wf6"
+    },
+    {
+      "role": "cchain-gas",
+      "kind": "secp256k1",
+      "evm": "0xb954f8190d7a11dc493c7559025b134238550315",
+      "pFuji": "P-fuji1akrpgkcf7cjl7rhq340xwa9nj2hd3qz2647jaj",
+      "pMainnet": "P-avax1akrpgkcf7cjl7rhq340xwa9nj2hd3qz2k86d3d"
+    },
+    {
+      "role": "companion-admin",
+      "kind": "secp256k1",
+      "evm": "0xae4e9d7784b1f01cf425620dc63b2b06e22b7b9c",
+      "pFuji": "P-fuji1ukswn4q8dk6rh4eeven3vp672h88shsung83cz",
+      "pMainnet": "P-avax1ukswn4q8dk6rh4eeven3vp672h88shsul6rw5a"
+    },
+    {
+      "role": "launch-packet-signer",
+      "kind": "secp256k1",
+      "evm": "0xac379903fb060f3f45cda4bb5fc192a607fc2b87",
+      "pFuji": "P-fuji1sllv7caezkdc36j6fjzet4dg920pslmn04m63z",
+      "pMainnet": "P-avax1sllv7caezkdc36j6fjzet4dg920pslmnr8l9aa"
+    },
+    {
+      "role": "prover-authority",
+      "kind": "ed25519",
+      "publicKeyHex": "0b0f54b0a8a00d8ede281b07931e272d422bc9a23adafe675cbb59770dbe5ac5"
+    }
+  ]
+}
