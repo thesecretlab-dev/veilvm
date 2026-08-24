@@ -9,6 +9,7 @@
         "evidence:launch-gates": "node run-launch-gate-evidence.mjs",
         "evidence:preflight": "node run-launch-gate-evidence.mjs --preflight-only --skip-timeout --skip-negative",
         "check:prelaunch": "node prelaunch-readiness.mjs",
+        "genesis:launchpad": "node genesis-launchpad.mjs",
         "check:companion-primitives": "node check-companion-primitives.mjs",
         "check:companion-policy": "node check-companion-primitives.mjs",
         "relay:opaque": "node relay-opaque-intents.mjs",

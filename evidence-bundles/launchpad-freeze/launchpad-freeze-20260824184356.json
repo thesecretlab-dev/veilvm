@@ -1,0 +1,25 @@
+{
+  "id": "D01",
+  "timestamp": "2026-08-24T18:43:56.277Z",
+  "totalSupply": 990999000,
+  "buckets": {
+    "circulating": 49549950,
+    "colVaultLocked": 900000000,
+    "colVaultLive": 41449050
+  },
+  "bucketSum": 990999000,
+  "feeRouterBips": {
+    "msrb": 7000,
+    "col": 2000,
+    "ops": 1000,
+    "sum": 10000
+  },
+  "reservationsFromCirculating": {
+    "keep3r2pct": 19819980,
+    "remainderAfterKeep3r": 29729970,
+    "note": "Keep3r/ops/staking/ecosystem are named cuts of circulating. They are not additional mint. Addresses assigned at Fuji genesis (Phase E), not here."
+  },
+  "placeholderChainID": "11111111111111111111111111111111LpoYY",
+  "pass": true,
+  "errors": []
+}
