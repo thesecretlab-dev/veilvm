@@ -119,6 +119,18 @@ if (-not $anvilUp) {
   Start-Sleep -Seconds 2
 }
 
+Write-Host "deploying companion rails (anvil 31337)"
+$env:EVM_RPC_URL = "http://127.0.0.1:8545"
+$env:FOUNDRY_PROFILE = "rails"
+$env:Path = "$Foundry;$env:Path"
+Set-Location $PSScriptRoot
+node deploy-rails.mjs
+if ($LASTEXITCODE -ne 0) { throw "deploy-rails failed" }
+$rails = Get-Content (Join-Path $PSScriptRoot "companion-evm.addresses.json") -Raw | ConvertFrom-Json
+$env:ORDER_GATEWAY = $rails.orderIntentGateway
+$env:LIQUIDITY_GATEWAY = $rails.liquidityIntentGateway
+$env:EVM_RELAY_EXECUTOR_PRIVATE_KEY = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
+
 $env:ORDER_MARKETS_PATH = Join-Path $Local "native-markets.json"
 $routerOk = $false
 try {
@@ -142,7 +154,13 @@ if ($n -lt 1) {
   $headers = @{ "content-type" = "application/json"; "x-relay-secret" = $env:ORDER_ROUTER_RELAY_SECRET }
   Invoke-RestMethod -Uri "http://127.0.0.1:9098/native/create-market" -Method Post -Headers $headers -Body '{"question":"VEIL local native market","outcomes":2,"creatorBond":1}' | Out-Null
 }
-Write-Host "stack up: veilvm :9660  anvil :8545  router :9098"
+$relayUp = $false
+try {
+  Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object { $_.CommandLine -match "relay-opaque-intents" } | Out-Null
+} catch {}
+Write-Host "starting opaque relayer (watch)"
+Start-Process -FilePath (Join-Path $NodeDir "node.exe") -WorkingDirectory $PSScriptRoot -ArgumentList @("relay-opaque-intents.mjs","--watch") -WindowStyle Hidden
+Write-Host "stack up: veilvm :9660  anvil :8545  router :9098  rails persisted  relayer watch"
 Write-Host "native UX: POST /orders  GET /markets  (frontend VEIL_ORDER_API_BASE=http://127.0.0.1:9098)"
 if ($SkipTests) { return }
 

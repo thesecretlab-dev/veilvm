@@ -6,7 +6,7 @@
  * Requires: anvil, forge, cast, order-router on :9098, VeilVM on :9660.
  */
 import { createHash, randomBytes } from 'node:crypto';
-import { writeFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
@@ -63,32 +63,15 @@ const created = await post('/native/create-market', {
 const marketId = created.marketId;
 console.log(`   marketId=${marketId} tx=${created.veilTxHash}`);
 
-console.log('2) deploy rails on anvil');
+console.log('2) companion rails (persisted)');
 run(FORGE, ['--version'], { cwd: contractsDir });
-const owner = run(CAST, ['wallet', 'address', PK]);
-const deploy = (contract) => {
-  const out = run(
-    FORGE,
-    [
-      'create',
-      contract,
-      '--rpc-url',
-      EVM_RPC,
-      '--private-key',
-      PK,
-      '--broadcast',
-      '--constructor-args',
-      owner,
-      owner,
-    ],
-    { cwd: contractsDir, env: { FOUNDRY_PROFILE: 'rails' } },
-  );
-  const m = out.match(/Deployed to:\s+(0x[a-fA-F0-9]{40})/);
-  if (!m) throw new Error(`deploy parse failed:\n${out}`);
-  return m[1];
-};
-const orderGw = deploy('contracts/bridge/VeilOrderIntentGateway.sol:VeilOrderIntentGateway');
+run(process.execPath, [resolve(scriptDir, 'deploy-rails.mjs')], { cwd: scriptDir });
+const rails = JSON.parse(readFileSync(resolve(scriptDir, 'companion-evm.addresses.json'), 'utf8'));
+const orderGw = rails.orderIntentGateway;
+const liqGw = rails.liquidityIntentGateway;
+if (!orderGw || !liqGw) throw new Error('deploy-rails did not write gateways');
 console.log(`   order gateway ${orderGw}`);
+console.log(`   liq gateway ${liqGw}`);
 
 console.log('3) mailbox + submitIntent');
 const envelope = randomBytes(128);
@@ -176,8 +159,6 @@ const minted = await post('/native/mint-vai', { amount: 10_000 });
 console.log(`   mint tx=${minted.veilTxHash}`);
 
 console.log('7) liquidity intent');
-const liqGw = deploy('contracts/bridge/VeilLiquidityIntentGateway.sol:VeilLiquidityIntentGateway');
-console.log(`   liq gateway ${liqGw}`);
 const liqEnvelope = randomBytes(128);
 const liqCommitment = '0x' + sha256(liqEnvelope).toString('hex');
 const liqNullifier = '0x' + randomBytes(32).toString('hex');

@@ -7,7 +7,7 @@ const inputPath = process.argv[2] || resolve(here, "companion-evm.addresses.json
 const fullPath = resolve(process.cwd(), inputPath);
 const upgradePath = process.argv[3] ? resolve(process.cwd(), process.argv[3]) : null;
 
-const requiredFields = [
+const fujiRequiredFields = [
   "network",
   "chainId",
   "rpcUrl",
@@ -23,6 +23,21 @@ const requiredFields = [
   "contractDeployerAllowList",
   "wveil",
   "bridgeMinterContract",
+];
+
+const localRequiredFields = [
+  "network",
+  "chainId",
+  "rpcUrl",
+  "tempAdminEoa",
+  "deployer1",
+  "bridgeRelayer1",
+  "wveil",
+  "bridgeMinterContract",
+  "teleporterMessenger",
+  "orderIntentGateway",
+  "liquidityIntentGateway",
+  "faucet",
 ];
 
 const recommendedFields = [
@@ -72,6 +87,12 @@ if (chainId === 22207) {
   fail("companion chainId 22207 is illegal (that is VeilVM HyperSDK app id). Use a distinct EVM chainId.");
 }
 
+const isLocalAnvil = chainId === 31337 || doc.network === "local-anvil" || doc.teleporterKind === "local-mock";
+if (isLocalAnvil && doc.teleporterKind !== "local-mock") {
+  fail("local-anvil registry must set teleporterKind=local-mock (do not pretend this is Fuji ICTT)");
+}
+
+const requiredFields = isLocalAnvil ? localRequiredFields : fujiRequiredFields;
 const missingRequired = requiredFields.filter((field) => isEmpty(doc[field]));
 const missingRecommended = recommendedFields.filter((field) => isEmpty(doc[field]));
 
@@ -144,7 +165,11 @@ if (upgradePath) {
   ], minter.admins || minter.adminAddresses || []);
 }
 
-console.log("PASS: required companion EVM primitive fields are populated.");
+if (isLocalAnvil) {
+  console.log("PASS: local-anvil rails registry is populated (Teleporter=local-mock, no subnet precompiles).");
+} else {
+  console.log("PASS: required companion EVM primitive fields are populated.");
+}
 if (missingRecommended.length > 0) {
   console.log(`WARN: missing recommended fields: ${missingRecommended.join(", ")}`);
 }
