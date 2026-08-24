@@ -1,0 +1,84 @@
+{
+  "censusDate": "2026-08-24",
+  "runlistItem": "A06",
+  "warning": "Public addresses only. No private keys. Lost owner is do-not-deploy-under.",
+  "keys": [
+    {
+      "role": "hardened_owner_lost",
+      "address": "0xB9a05AFC8eff7eE6a84889Bb9C88A89eAA2f96af",
+      "status": "lost",
+      "action": "do-not-deploy-under",
+      "source": "veildb/README.md example + LIVE_DEVLOG 2026-02-22 key discovery (targetFound=false)"
+    },
+    {
+      "role": "hardened_owner_replacement_generated_on_josh_host",
+      "address": "0x641597…407B",
+      "status": "have_key_on_josh_host_only",
+      "action": "do_not_assume_present_on_this_PC",
+      "source": "LIVE_DEVLOG 2026-02-22 22:16:55. Full address redacted in git."
+    },
+    {
+      "role": "genesis_tokenomics_authority_hypersdk",
+      "address": "0x0014e7b4d411d05bc745f3a3d43328171ddffab3693f1bcc95dc63a84440366e50b1cb1a38",
+      "status": "unknown_custody",
+      "action": "rotate_before_any_public_network",
+      "notes": "Same hex used for governance, operations, mintAuthority, proverAuthority in genesis.json."
+    },
+    {
+      "role": "companion_temp_admin_eoa",
+      "address": "0x580358409B75e315919a9aBFEf9cB3b55F54503A",
+      "status": "historical_local",
+      "action": "replace_with_new_operator_key_phase_B",
+      "source": "veilvm/scripts/companion-evm.addresses.json"
+    },
+    {
+      "role": "bridge_relayer_1",
+      "address": "0x7deFD0ea7934bFA6a3C2D638e6A6f215dE8FAd53",
+      "status": "historical",
+      "action": "replace_on_fuji"
+    },
+    {
+      "role": "bridge_relayer_2",
+      "address": "0x7843eb9f852D05f9A6314b77f7566b7fAD7B4bdF",
+      "status": "historical",
+      "action": "replace_on_fuji"
+    },
+    {
+      "role": "ops_keeper_1",
+      "address": "0x698acAcB4446ACaE951b5b9872a8bDC0C3c64A55",
+      "status": "historical"
+    },
+    {
+      "role": "deployer_1",
+      "address": "0x9d0FE62f75ba12d1f2a965756A91a88F26cBB1b4",
+      "status": "historical"
+    },
+    {
+      "role": "treasury_funding",
+      "address": "0x26933616172506ec5d936d4991b045872ed56369",
+      "status": "historical"
+    },
+    {
+      "role": "companion_bridge_minter_placeholder",
+      "address": "0x18a85af9db521f9763e1a68e4E358284AAA6eF0C",
+      "status": "placeholder",
+      "action": "must_replace_before_mainnet",
+      "source": "companion-evm.addresses.json notes"
+    },
+    {
+      "role": "teleporter_messenger_placeholder",
+      "address": "0xC1b36605cEb6200c76A6AF7916267113BA5034de",
+      "status": "placeholder"
+    },
+    {
+      "role": "teleporter_registry_placeholder",
+      "address": "0x1B0302c822bacC41a4bB3a0B40e24Add91CF9c66",
+      "status": "placeholder"
+    }
+  ],
+  "thisWorkstation": {
+    "privateKeyFilesFound": false,
+    "secretsDir": "veilvm/secrets/README.md only",
+    "phaseB": "Generate new operator keys. Do not reuse lost 0xB9a05A or Josh-only 0x641597 unless that key material is recovered into an HSM."
+  }
+}

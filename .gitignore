@@ -20,6 +20,11 @@ secrets/*.txt
 *.log
 *.tsbuildinfo
 
+# Local workstation HyperSDK overlay (this PC is not hypersdk/examples/veilvm)
+go.work
+go.work.sum
+
 # OS files
 .DS_Store
 Thumbs.db
+
