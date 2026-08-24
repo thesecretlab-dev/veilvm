@@ -9,6 +9,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/ava-labs/avalanchego/ids"
+	"github.com/ava-labs/hypersdk/api/indexer"
 	"github.com/ava-labs/hypersdk/api/jsonrpc"
 	"github.com/ava-labs/hypersdk/auth"
 	"github.com/ava-labs/hypersdk/chain"
@@ -94,6 +96,24 @@ func run(ctx context.Context, nodeURL, chainID, pkHex string, report *Report) er
 	// Init clients
 	coreClient := jsonrpc.NewJSONRPCClient(baseURL)
 	veilClient := vmclient.NewJSONRPCClient(baseURL)
+	idxClient := indexer.NewClient(baseURL)
+
+	waitTx := func(txID ids.ID, name string) error {
+		for i := 0; i < 60; i++ {
+			resp, found, err := idxClient.GetTxResults(ctx, txID)
+			if err != nil {
+				return fmt.Errorf("%s indexer: %w", name, err)
+			}
+			if found {
+				if !resp.Result.Success {
+					return fmt.Errorf("%s execution failed: %s", name, string(resp.Result.Error))
+				}
+				return nil
+			}
+			time.Sleep(500 * time.Millisecond)
+		}
+		return fmt.Errorf("%s tx result timeout: %s", name, txID)
+	}
 
 	// Helper: build, sign, submit a single-action tx
 	submitAction := func(name string, action chain.Action) (string, error) {
@@ -149,15 +169,8 @@ func run(ctx context.Context, nodeURL, chainID, pkHex string, report *Report) er
 		if err != nil {
 			return "", fmt.Errorf("submit: %w", err)
 		}
-
-		// Wait for inclusion — poll until height advances
-		_, h0, _, _ := coreClient.Accepted(ctx)
-		for i := 0; i < 30; i++ {
-			time.Sleep(1 * time.Second)
-			_, h1, _, _ := coreClient.Accepted(ctx)
-			if h1 > h0 {
-				break
-			}
+		if err := waitTx(txID, name); err != nil {
+			return txID.String(), err
 		}
 		return txID.String(), nil
 	}
@@ -182,21 +195,30 @@ func run(ctx context.Context, nodeURL, chainID, pkHex string, report *Report) er
 
 	// ── Step 2: Create VEIL/VAI pool (asset0=0, asset1=1, fee=30bps) ──
 	{
-		txID, err := submitAction("create_pool", &actions.CreatePool{
-			Asset0:  actions.AssetVEIL,
-			Asset1:  actions.AssetVAI,
-			FeeBips: 30,
-		})
-		step := Step{Name: "create_pool", TxID: txID}
-		if err != nil {
-			step.Error = err.Error()
-			step.Pass = false
+		existing, poolErr := veilClient.Pool(ctx, actions.AssetVEIL, actions.AssetVAI)
+		if poolErr == nil && existing != nil && existing.FeeBips > 0 {
+			report.Steps = append(report.Steps, Step{
+				Name:   "create_pool",
+				Pass:   true,
+				Detail: fmt.Sprintf("pool already exists fee=%d", existing.FeeBips),
+			})
+		} else {
+			txID, err := submitAction("create_pool", &actions.CreatePool{
+				Asset0:  actions.AssetVEIL,
+				Asset1:  actions.AssetVAI,
+				FeeBips: 30,
+			})
+			step := Step{Name: "create_pool", TxID: txID}
+			if err != nil {
+				step.Error = err.Error()
+				step.Pass = false
+				report.Steps = append(report.Steps, step)
+				return fmt.Errorf("create_pool: %w", err)
+			}
+			step.Pass = true
+			step.Detail = "VEIL/VAI pool created, fee=30bps"
 			report.Steps = append(report.Steps, step)
-			return fmt.Errorf("create_pool: %w", err)
 		}
-		step.Pass = true
-		step.Detail = "VEIL/VAI pool created, fee=30bps"
-		report.Steps = append(report.Steps, step)
 	}
 
 	// ── Step 3: Verify pool via RPC ──
@@ -213,7 +235,7 @@ func run(ctx context.Context, nodeURL, chainID, pkHex string, report *Report) er
 		}
 		report.Steps = append(report.Steps, Step{
 			Name:   "query_pool_created",
-			Pass:   pool.FeeBips == 30 && pool.Reserve0 == 0 && pool.Reserve1 == 0,
+			Pass:   pool.FeeBips == 30,
 			Detail: fmt.Sprintf("fee=%d reserve0=%d reserve1=%d totalLP=%d", pool.FeeBips, pool.Reserve0, pool.Reserve1, pool.TotalLP),
 		})
 	}
@@ -289,6 +311,12 @@ func run(ctx context.Context, nodeURL, chainID, pkHex string, report *Report) er
 		if !ok {
 			return fmt.Errorf("pool reserves not set after add_liquidity")
 		}
+		report.Summary.PoolBefore = &PoolState{
+			Reserve0: pool.Reserve0,
+			Reserve1: pool.Reserve1,
+			TotalLP:  pool.TotalLP,
+			FeeBips:  pool.FeeBips,
+		}
 	}
 
 	// ── Step 8: Swap 100 VEIL → VAI ──
@@ -327,10 +355,9 @@ func run(ctx context.Context, nodeURL, chainID, pkHex string, report *Report) er
 		lp, _ := veilClient.LPBalance(ctx, actions.AssetVEIL, actions.AssetVAI, addr)
 		report.Summary.LPAfter = lp
 
-		// Verify invariants: reserve0 increased (VEIL added), reserve1 decreased (VAI removed)
 		before := report.Summary.PoolBefore
 		after := report.Summary.PoolAfter
-		swapOK := after.Reserve0 > 10_000 && after.Reserve1 < 10_000
+		swapOK := after.Reserve0 > before.Reserve0 && after.Reserve1 < before.Reserve1
 		report.Steps = append(report.Steps, Step{
 			Name:   "verify_swap_invariants",
 			Pass:   swapOK,

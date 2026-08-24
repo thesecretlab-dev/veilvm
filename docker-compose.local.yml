@@ -1,13 +1,19 @@
 name: veilvm-local
+# Phase C local node. Do NOT track a subnet on first boot.
+# After `node scripts/setup-local.mjs`, restart with --track-subnets=<new SubnetID>.
+# Build context is C:\Users\Justin\src (hypersdk + veil/veilvm).
 services:
   node:
-    image: veilvm-node:latest
+    build:
+      context: ../..
+      dockerfile: veil/veilvm/Dockerfile.node
+    image: veilvm-node:local
     container_name: veilvm-node
     environment:
       VEIL_ZK_VERIFIER_ENABLED: "true"
       VEIL_ZK_VERIFIER_STRICT: "true"
-      VEIL_ZK_REQUIRED_CIRCUIT_ID: "${VEIL_ZK_REQUIRED_CIRCUIT_ID:-clearhash-v1}"
-      VEIL_ZK_GROTH16_VK_PATH: "${VEIL_ZK_GROTH16_VK_PATH:-/root/.avalanchego/zk/groth16_clearhash_vk.bin}"
+      VEIL_ZK_REQUIRED_CIRCUIT_ID: "shielded-ledger-v1"
+      VEIL_ZK_GROTH16_VK_PATH: "/root/.avalanchego/zk/groth16_shielded_ledger_vk.bin"
     ports:
       - "127.0.0.1:9660:9650"
       - "127.0.0.1:9661:9651"
@@ -23,7 +29,7 @@ services:
       - --http-allowed-hosts=localhost,127.0.0.1,host.docker.internal
       - --plugin-dir=/root/.avalanchego/plugins
       - --log-level=info
-      - --track-subnets=2AWc8cibQ5tZgTiMo9KoRaZHc3TV3pEcBRsDBr2DiMZbPNSFm9
+      - --public-ip=127.0.0.1
 volumes:
   veilvm-db:
   veilvm-staking:

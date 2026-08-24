@@ -24,6 +24,14 @@ secrets/*.txt
 go.work
 go.work.sum
 
+# Windows/local node binaries, plugin dir, chain data
+.local/
+
+# Local stack mailbox (opaque envelopes, not for git)
+scripts/intent-mailbox.json
+scripts/intent-mailbox-liq.json
+scripts/node_modules/
+
 # OS files
 .DS_Store
 Thumbs.db

@@ -1,7 +1,9 @@
 import { readFileSync } from "fs";
-import { resolve } from "path";
+import { dirname, resolve } from "path";
+import { fileURLToPath } from "url";
 
-const inputPath = process.argv[2] || "scripts/companion-evm.addresses.json";
+const here = dirname(fileURLToPath(import.meta.url));
+const inputPath = process.argv[2] || resolve(here, "companion-evm.addresses.json");
 const fullPath = resolve(process.cwd(), inputPath);
 const upgradePath = process.argv[3] ? resolve(process.cwd(), process.argv[3]) : null;
 
@@ -59,6 +61,15 @@ try {
   doc = JSON.parse(readFileSync(fullPath, "utf8"));
 } catch (err) {
   fail(`Unable to read/parse ${fullPath}: ${err.message}`);
+}
+
+if (doc.abandoned === true) {
+  fail(`${fullPath} is an abandoned packet. Do not use it as the live companion registry.`);
+}
+
+const chainId = Number(doc.chainId);
+if (chainId === 22207) {
+  fail("companion chainId 22207 is illegal (that is VeilVM HyperSDK app id). Use a distinct EVM chainId.");
 }
 
 const missingRequired = requiredFields.filter((field) => isEmpty(doc[field]));

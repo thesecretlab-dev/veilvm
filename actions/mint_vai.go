@@ -37,14 +37,25 @@ func (*MintVAI) GetTypeID() uint8 {
 	return mconsts.MintVAIID
 }
 
-func (t *MintVAI) StateKeys(_ codec.Address, _ ids.ID) state.Keys {
-	return state.Keys{
-		string(storage.VAIConfigKey()):      state.Read,
-		string(storage.VAIStateKey()):       state.Read | state.Write,
-		string(storage.RiskConfigKey()):     state.Read,
-		string(storage.ReserveStateKey()):   state.Read,
-		string(storage.VAIBalanceKey(t.To)): state.Read | state.Write,
+func (t *MintVAI) StateKeys(actor codec.Address, _ ids.ID) state.Keys {
+	keys := state.Keys{}
+	// First mint allocates the VAI balance key. Use All on every key this
+	// action reads or writes so execution cannot trip key-permission checks.
+	for _, k := range [][]byte{
+		storage.VAIConfigKey(),
+		storage.VAIStateKey(),
+		storage.RiskConfigKey(),
+		storage.ReserveStateKey(),
+		storage.VAIBalanceKey(t.To),
+		storage.VAIBalanceKey(actor),
+		storage.BalanceKey(actor),
+		storage.BalanceKey(t.To),
+	} {
+		if !keys.Add(string(k), state.All) {
+			panic("mint_vai: invalid state key encoding")
+		}
 	}
+	return keys
 }
 
 func (t *MintVAI) Bytes() []byte {

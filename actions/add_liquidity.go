@@ -34,10 +34,10 @@ func (*AddLiquidity) GetTypeID() uint8 {
 
 func (a *AddLiquidity) StateKeys(actor codec.Address, _ ids.ID) state.Keys {
 	return state.Keys{
-		string(storage.BalanceKey(actor)):                       state.Read | state.Write,
-		string(storage.VAIBalanceKey(actor)):                    state.Read | state.Write,
-		string(storage.PoolKey(a.Asset0, a.Asset1)):             state.Read | state.Write,
-		string(storage.LPBalanceKey(a.Asset0, a.Asset1, actor)): state.Read | state.Write,
+		string(storage.BalanceKey(actor)):                       state.All,
+		string(storage.VAIBalanceKey(actor)):                    state.All,
+		string(storage.PoolKey(a.Asset0, a.Asset1)):             state.All,
+		string(storage.LPBalanceKey(a.Asset0, a.Asset1, actor)): state.All,
 	}
 }
 

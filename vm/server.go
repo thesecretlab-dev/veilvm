@@ -134,6 +134,10 @@ type LPBalanceReply struct {
 	Amount uint64 `json:"amount"`
 }
 
+func (j *JSONRPCServer) Lpbalance(req *http.Request, args *LPBalanceArgs, reply *LPBalanceReply) error {
+	return j.LPBalance(req, args, reply)
+}
+
 func (j *JSONRPCServer) LPBalance(req *http.Request, args *LPBalanceArgs, reply *LPBalanceReply) error {
 	ctx, span := j.vm.Tracer().Start(req.Context(), "Server.LPBalance")
 	defer span.End()
@@ -152,6 +156,10 @@ type VAIBalanceArgs struct {
 
 type VAIBalanceReply struct {
 	Amount uint64 `json:"amount"`
+}
+
+func (j *JSONRPCServer) Vaibalance(req *http.Request, args *VAIBalanceArgs, reply *VAIBalanceReply) error {
+	return j.VAIBalance(req, args, reply)
 }
 
 func (j *JSONRPCServer) VAIBalance(req *http.Request, args *VAIBalanceArgs, reply *VAIBalanceReply) error {
@@ -174,6 +182,10 @@ type VAIStateReply struct {
 	TotalDebt        uint64        `json:"total_debt"`
 	EpochStartUnix   int64         `json:"epoch_start_unix"`
 	EpochMinted      uint64        `json:"epoch_minted"`
+}
+
+func (j *JSONRPCServer) Vaistate(req *http.Request, empty *struct{}, reply *VAIStateReply) error {
+	return j.VAIState(req, empty, reply)
 }
 
 func (j *JSONRPCServer) VAIState(req *http.Request, _ *struct{}, reply *VAIStateReply) error {

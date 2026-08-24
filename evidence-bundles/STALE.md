@@ -11,7 +11,7 @@ Feb 2026 local launch-gate evidence on this tree is **archaeology only**. It doe
 - Chain IDs in those bundles (`gbbsaboF…`, later `aQ8Ct8…`) are **not** registered on Avalanche mainnet or Fuji (Glacier 2026-08-24).
 - `PASS (local)` / `GO FOR PRODUCTION` / `deploymentReady=true` were local-profile results.
 - Hardened owner `0xB9a05AFC8eff7eE6a84889Bb9C88A89eAA2f96af` was already lost at the time of those greens.
-- Companion Teleporter/bridge addresses in `scripts/companion-evm.addresses.json` are marked **placeholders**.
+- Companion Teleporter/bridge addresses from Feb are archived in `evidence-bundles/abandoned-feb-2026/`. Live `scripts/companion-evm.addresses.json` is local anvil only.
 
 ## Pointers quarantined
 

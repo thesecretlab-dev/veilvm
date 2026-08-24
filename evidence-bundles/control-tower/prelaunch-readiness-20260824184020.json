@@ -1,0 +1,86 @@
+{
+  "profile": "local-windows",
+  "network": "local",
+  "timestamp": "2026-08-24T18:40:20.235Z",
+  "stamp": "2026-08-24T18:40:20.174Z",
+  "overallPass": true,
+  "productionLaunchPass": false,
+  "node": "http://127.0.0.1:9660",
+  "chainID": "bdRGUMA7rzZFXjbn1ePTjqhAUfTjW94e69p7qZd4puZ3uEosL",
+  "subnetID": "AkMZ5HpwZRuB1CY7M6HvUmHuVipiRUKD1dTyLmkoQFe8qqMrC",
+  "nodeID": "NodeID-HMqe6QZg8h7Bb3minFk2YruUeGzdhy94H",
+  "companion": {
+    "rpc": "http://127.0.0.1:8545",
+    "chainId": 31337
+  },
+  "router": "http://127.0.0.1:9098",
+  "checks": {
+    "c01Health": {
+      "ok": true,
+      "detail": "healthy=true veilHeight=6216"
+    },
+    "c01Readiness": {
+      "ok": true,
+      "detail": "ready status=200"
+    },
+    "c02ZkVerifier": {
+      "ok": true,
+      "detail": "{\"enabled\":true,\"strict\":true,\"groth16VerifyingKeyPath\":\"C:\\\\Users\\\\Justin\\\\src\\\\veil\\\\veilvm\\\\zk-fixture-new\\\\groth16_shielded_ledger_vk.bin\",\"requiredCircuitID\":\"shielded-ledger-v1\"}"
+    },
+    "c03ChainProducing": {
+      "ok": true,
+      "detail": "chainID=bdRGUMA7rzZFXjbn1ePTjqhAUfTjW94e69p7qZd4puZ3uEosL"
+    },
+    "c04CompanionAnvil": {
+      "ok": true,
+      "detail": "eth_chainId=31337"
+    },
+    "c04OrderRouter": {
+      "ok": true,
+      "detail": "{\"chainId\":\"bdRGUMA7rzZFXjbn1ePTjqhAUfTjW94e69p7qZd4puZ3uEosL\",\"ok\":true}"
+    },
+    "c05AbandonedFebCompanion": {
+      "ok": true,
+      "detail": "live chainId=31337 abandonedFlag=false"
+    },
+    "supplyFreeze": {
+      "ok": true,
+      "detail": "tokenomics.totalSupply=990999000"
+    }
+  },
+  "productionGates": {
+    "checklist": {
+      "ok": false,
+      "reason": "Feb production checklist is STALE-2026-02"
+    },
+    "companionPrimitives": {
+      "ok": false,
+      "reason": "Teleporter/bridge not deployed on local anvil (Phase F)"
+    },
+    "tokenomics": {
+      "ok": false,
+      "reason": "D01 launchpad freeze not run"
+    },
+    "auditClosure": {
+      "ok": false,
+      "reason": "not a production profile"
+    },
+    "flywheelAudit": {
+      "ok": false,
+      "reason": "not a production profile"
+    },
+    "economicCoherence": {
+      "ok": false,
+      "reason": "not a production profile"
+    },
+    "animaReadiness": {
+      "ok": false,
+      "reason": "Fuji RPC not pointed; Phase E/G"
+    }
+  },
+  "evidence": [
+    "evidence-bundles/local-revive-2026-08-24/smoke.md",
+    "evidence-bundles/local-revive-2026-08-24/stack-e2e.md",
+    "evidence-bundles/abandoned-feb-2026/README.md"
+  ]
+}

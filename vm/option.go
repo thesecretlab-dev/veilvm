@@ -13,7 +13,7 @@ import (
 )
 
 const Namespace = "controller"
-const defaultLocalGroth16VKPath = "/root/.avalanchego/zk/groth16_clearhash_vk.bin"
+const defaultLocalGroth16VKPath = "/root/.avalanchego/zk/groth16_shielded_ledger_vk.bin"
 
 type Config struct {
 	Enabled bool             `json:"enabled"`
@@ -91,7 +91,7 @@ func resolveZKConfig(cfg ZKVerifierConfig) ZKVerifierConfig {
 			cfg.Strict = true
 			cfg.Groth16VerifyingKeyPath = defaultLocalGroth16VKPath
 			if strings.TrimSpace(cfg.RequiredCircuitID) == "" {
-				cfg.RequiredCircuitID = mconsts.ProofCircuitClearHashV1
+				cfg.RequiredCircuitID = mconsts.ProofCircuitShieldedLedgerV1
 			}
 		}
 	}

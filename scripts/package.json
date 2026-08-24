@@ -8,8 +8,11 @@
         "smoke": "node smoke-local.mjs",
         "evidence:launch-gates": "node run-launch-gate-evidence.mjs",
         "evidence:preflight": "node run-launch-gate-evidence.mjs --preflight-only --skip-timeout --skip-negative",
+        "check:prelaunch": "node prelaunch-readiness.mjs",
         "check:companion-primitives": "node check-companion-primitives.mjs",
-        "check:companion-policy": "node check-companion-primitives.mjs companion-evm.addresses.json ../../../../avalanche-l1-docker/data/avalanche-cli/subnets/VEIL2/upgrade.json",
+        "check:companion-policy": "node check-companion-primitives.mjs",
+        "relay:opaque": "node relay-opaque-intents.mjs",
+        "e2e:local-stack": "node local-stack-e2e.mjs",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "keywords": [],
