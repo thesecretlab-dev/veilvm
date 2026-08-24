@@ -659,6 +659,9 @@ func GetTreasuryState(ctx context.Context, im state.Immutable) (TreasuryState, e
 }
 
 func PutFeeRouterConfig(ctx context.Context, mu state.Mutable, cfg FeeRouterConfig) error {
+	if uint64(cfg.MSRBBips)+uint64(cfg.COLBips)+uint64(cfg.OpsBips) != bipsDenominator {
+		return fmt.Errorf("%w: sum=%d", ErrInvalidFeeRouterConfig, uint64(cfg.MSRBBips)+uint64(cfg.COLBips)+uint64(cfg.OpsBips))
+	}
 	v := make([]byte, 0, consts.Uint16Len*3)
 	v = binary.BigEndian.AppendUint16(v, cfg.MSRBBips)
 	v = binary.BigEndian.AppendUint16(v, cfg.COLBips)

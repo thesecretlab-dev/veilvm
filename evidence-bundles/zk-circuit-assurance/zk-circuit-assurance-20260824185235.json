@@ -1,0 +1,23 @@
+{
+  "id": "D05",
+  "timestamp": "2026-08-24T18:52:35.382Z",
+  "circuitID": "shielded-ledger-v1",
+  "proofType": "groth16",
+  "curve": "bn254",
+  "fixtureDir": "zk-fixture-new",
+  "hashes": {
+    "groth16_shielded_ledger_vk.bin": "40d25f181550c879f93d22dfa50305700bdb0e731ced46d1b789248e552398ba",
+    "groth16_shielded_ledger_pk.bin": "52167d442cdc52f2005b6aad59f5e5a4cbcd4b6029af1a41ed671275c5bacf90",
+    "sample_shielded_ledger_preimage.hex": "fee7cf91021e4f6ecc8130ce1559b3f2775347d057ff118f15bfdf026c1e05c6",
+    "sample_shielded_ledger_proof.bin": "a8b26712a9806a7e8369469aaa2969e74359e092feac057f729be9081f80ee30",
+    "sample_shielded_ledger_proof_envelope.bin": "d179e72bc76960428275afd278ca55e395e28cf5f7d0d3d67435496c245c6310",
+    "sample_shielded_ledger_public_inputs_hash.hex": "9ab62b9de28cefd5ca79cdb767f753cbb5a853cbd92a4940c436102d7a1346ad",
+    "sample_shielded_ledger_public_witness.bin": "98e4ce8a90a6da160acfc61910d99502f4f5bcc09be4ce5dc86e42d4ec07d390"
+  },
+  "notes": [
+    "Pinned from this tree, not Feb launch-gate evidence.",
+    "clearhash-v1 fixtures remain on disk for archaeology and are not the production circuit.",
+    "Verifier requiredCircuitID must be shielded-ledger-v1."
+  ],
+  "pass": true
+}
