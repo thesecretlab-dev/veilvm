@@ -37,20 +37,50 @@ const hit = (listed.markets || []).find((m) => m.marketId === created.marketId);
 if (!hit) throw new Error(`market missing from GET /markets`);
 console.log(`3) GET /markets has native row`);
 
+const wallet = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266";
+const nonce = "0x" + "ab".repeat(32);
+const amountUsd = 25;
+const message = [
+  "VEIL native order v1",
+  `chain:${health.chainId}`,
+  `market:${created.marketId}`,
+  "side:buy",
+  "outcome:yes",
+  `amountUsd:${amountUsd.toFixed(8)}`,
+  `wallet:${wallet}`,
+  `nonce:${nonce}`,
+].join("\n");
+const CAST = process.env.CAST_BIN || "cast";
+const ANVIL_PK = process.env.EVM_RELAY_EXECUTOR_PRIVATE_KEY ||
+  "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+const { spawnSync } = await import("node:child_process");
+const signed = spawnSync(CAST, ["wallet", "sign", "--private-key", ANVIL_PK, message], {
+  encoding: "utf8",
+});
+if (signed.status !== 0) {
+  throw new Error(`cast wallet sign: ${signed.stderr || signed.stdout}`);
+}
+const walletSignature = (signed.stdout || "").trim();
+
 const order = await call("/orders", {
   method: "POST",
   body: {
     marketId: created.marketId,
     side: "buy",
     outcome: "yes",
-    amountUsd: 25,
-    walletAddress: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    amountUsd,
+    walletAddress: wallet,
+    walletNonce: nonce,
+    walletSignature,
     nativeNetwork: "veil",
     routingFeeBps: 0,
   },
 });
 if (!order.accepted || !order.veilTxHash) throw new Error(`/orders: ${JSON.stringify(order)}`);
-console.log(`4) native order settled ${order.veilTxHash}`);
+if (order.status && order.status !== "committed") {
+  throw new Error(`/orders expected committed, got ${JSON.stringify(order)}`);
+}
+console.log(`4) native order committed ${order.veilTxHash} window=${order.windowId ?? "?"}`);
 
 const poly = await fetch(`${ROUTER}/orders`, {
   method: "POST",

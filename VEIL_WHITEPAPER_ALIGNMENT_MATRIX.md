@@ -79,11 +79,12 @@ Primary source: `VEIL_MASTER_RUNBOOK.md`
 
 Current blockers to resolve before protocol claims are operational:
 
-1. Groth16/PLONK verifier wiring is present, but strict runtime currently rejects purported valid Groth16 envelopes due witness-length mismatch (`32 vs 33`).
-2. Full shielded-ledger circuit suite is not yet the active launch path (`clearhash-v1` trial circuit is still in use).
+1. Groth16 `shielded-ledger-v1` is the local required circuit (digest-binding of fills + commitment/nullifier/state-root slots). It is **not** in-circuit matching or merkle inclusion.
+2. Local gossip is VTG2 2-of-3. Production 13-of-20 DKG, encrypted RPC ingest, and multi-validator share exchange on a public network are not done.
 3. Long-run 4-6s benchmark evidence and failure-drill artifacts are still pending.
 4. Full stress/simulation pass for COL and RBS risk controls is still pending.
-5. Companion EVM primitive rollout remains a launch gate for bridge-enabled mode (current Teleporter/bridge deploys are placeholders).
+5. Companion EVM primitive rollout remains a launch gate for bridge-enabled mode (local Teleporter is a mock; not Fuji ICTT).
+6. The Feb witness-length `32 vs 33` rejection and `clearhash-v1` as the live circuit are **stale**. Do not repeat them.
 
 Primary source: `VEIL_MASTER_RUNBOOK.md`
 

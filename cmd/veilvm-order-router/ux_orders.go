@@ -1,7 +1,6 @@
 package main
 
 import (
-	"crypto/rand"
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
@@ -16,22 +15,25 @@ import (
 )
 
 type marketRec struct {
-	MarketID  string `json:"marketId"`
-	Question  string `json:"question"`
-	CreatedAt string `json:"createdAt"`
-	LastTx    string `json:"lastTx,omitempty"`
-	Source    string `json:"sourceName"`
+	MarketID     string `json:"marketId"`
+	Question     string `json:"question"`
+	CreatedAt    string `json:"createdAt"`
+	LastTx       string `json:"lastTx,omitempty"`
+	Source       string `json:"sourceName"`
+	LastWindowID uint64 `json:"lastWindowId,omitempty"`
 }
 
 type uxOrderReq struct {
-	MarketID       string  `json:"marketId"`
-	Side           string  `json:"side"`
-	Outcome        string  `json:"outcome"`
-	AmountUsd      float64 `json:"amountUsd"`
-	WalletAddress  string  `json:"walletAddress"`
-	NativeNetwork  string  `json:"nativeNetwork"`
-	RoutingFeeBps  int     `json:"routingFeeBps"`
-	Question       string  `json:"question"`
+	MarketID        string  `json:"marketId"`
+	Side            string  `json:"side"`
+	Outcome         string  `json:"outcome"`
+	AmountUsd       float64 `json:"amountUsd"`
+	WalletAddress   string  `json:"walletAddress"`
+	WalletSignature string  `json:"walletSignature"`
+	WalletNonce     string  `json:"walletNonce"`
+	NativeNetwork   string  `json:"nativeNetwork"`
+	RoutingFeeBps   int     `json:"routingFeeBps"`
+	Question        string  `json:"question"`
 }
 
 func (r *router) authorized(req *http.Request) bool {
@@ -85,6 +87,12 @@ func (r *router) handleUXOrder(w http.ResponseWriter, req *http.Request) error {
 	if strings.TrimSpace(in.WalletAddress) == "" {
 		return fmt.Errorf("walletAddress required")
 	}
+	if strings.TrimSpace(in.WalletSignature) == "" || strings.TrimSpace(in.WalletNonce) == "" {
+		return fmt.Errorf("walletSignature and walletNonce required")
+	}
+	if _, err := parseNonceHex(in.WalletNonce); err != nil {
+		return err
+	}
 	if err := checkRouting("veil_native", in.RoutingFeeBps); err != nil {
 		return err
 	}
@@ -94,13 +102,21 @@ func (r *router) handleUXOrder(w http.ResponseWriter, req *http.Request) error {
 		return err
 	}
 
-	env, commit, nullifier, err := buildOrderEnvelope(marketID.String(), in.Side, in.Outcome, in.AmountUsd, in.WalletAddress)
+	wallet := strings.ToLower(strings.TrimSpace(in.WalletAddress))
+	nonce := strings.ToLower(strings.TrimSpace(in.WalletNonce))
+	msg := nativeOrderMessage(r.chainID, marketID.String(), in.Side, in.Outcome, wallet, nonce, in.AmountUsd)
+	if err := verifyWalletSig(wallet, msg, in.WalletSignature); err != nil {
+		return err
+	}
+
+	windowID, _ := r.nextWindow(time.Now().UnixMilli())
+	env, commit, nullifier, err := r.buildOpaqueOrderEnvelope(windowID, marketID.String(), in.Side, in.Outcome, in.AmountUsd, wallet, nonce)
 	if err != nil {
 		return err
 	}
 	txID, err := r.submit(req.Context(), "commit_order", &actions.CommitOrder{
 		MarketID:   marketID,
-		WindowID:   1,
+		WindowID:   windowID,
 		Envelope:   env,
 		Commitment: commit,
 	})
@@ -109,16 +125,18 @@ func (r *router) handleUXOrder(w http.ResponseWriter, req *http.Request) error {
 	}
 	r.remember(nullifier, txID)
 	r.rememberMarket(marketRec{
-		MarketID:  marketID.String(),
-		Question:  question,
-		CreatedAt: time.Now().UTC().Format(time.RFC3339),
-		LastTx:    txID,
-		Source:    "VEIL native",
+		MarketID:     marketID.String(),
+		Question:     question,
+		CreatedAt:    time.Now().UTC().Format(time.RFC3339),
+		LastTx:       txID,
+		Source:       "VEIL native",
+		LastWindowID: windowID,
 	})
 	writeJSON(w, 200, map[string]any{
 		"accepted":           true,
-		"status":             "executed",
-		"message":            "committed on VeilVM",
+		"status":             "committed",
+		"message":            "committed on VeilVM (opaque envelope; not cleared)",
+		"windowId":           windowID,
 		"orderId":            nullifier,
 		"veilTxHash":         txID,
 		"oracleTxHash":       "",
@@ -178,19 +196,25 @@ func (r *router) ensureMarket(req *http.Request, rawID, question string) (ids.ID
 	return marketID, question, nil
 }
 
-func buildOrderEnvelope(marketID, side, outcome string, amount float64, wallet string) (env, commit []byte, nullifier string, err error) {
-	nonce := make([]byte, 32)
-	if _, err = rand.Read(nonce); err != nil {
+func (r *router) buildOpaqueOrderEnvelope(windowID uint64, marketID, side, outcome string, amount float64, wallet, nonceHex string) (env, commit []byte, nullifier string, err error) {
+	nonce, err := parseNonceHex(nonceHex)
+	if err != nil {
 		return nil, nil, "", err
 	}
 	body := fmt.Sprintf("veil-order-v1|%s|%s|%s|%.8f|%s|%x", marketID, side, outcome, amount, wallet, nonce)
-	env = []byte(body)
+	key, err := r.windows.key(windowID)
+	if err != nil {
+		return nil, nil, "", err
+	}
+	env, err = sealEnvelope(key, []byte(body))
+	if err != nil {
+		return nil, nil, "", err
+	}
+	if envelopeLooksPlaintext(env) {
+		return nil, nil, "", fmt.Errorf("refusing to commit plaintext envelope")
+	}
 	if len(env) < minEnvelopeSize {
-		pad := make([]byte, minEnvelopeSize-len(env))
-		if _, err = rand.Read(pad); err != nil {
-			return nil, nil, "", err
-		}
-		env = append(env, pad...)
+		return nil, nil, "", fmt.Errorf("sealed envelope too small: %d", len(env))
 	}
 	sum := sha256Sum(env)
 	commit = sum[:]

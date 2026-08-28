@@ -62,7 +62,7 @@ func TestPinnedVKHashStable(t *testing.T) {
 		t.Fatal(err)
 	}
 	sum := sha256.Sum256(raw)
-	const want = "40d25f181550c879f93d22dfa50305700bdb0e731ced46d1b789248e552398ba"
+	const want = "7618a647534c5cc47586f8ad778264a8dfc1a5da71e557db13607bfeae07a5a9"
 	got := hex.EncodeToString(sum[:])
 	if got != want {
 		t.Fatalf("pinned vk hash changed: got=%s want=%s", got, want)

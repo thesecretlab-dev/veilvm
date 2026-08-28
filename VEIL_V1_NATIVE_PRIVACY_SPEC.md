@@ -26,6 +26,13 @@ This spec defines the normative implementation baseline for:
 - No plaintext mempool path is allowed in production mode.
 - Security assumption: fewer than threshold colluding validators cannot decrypt pre-reveal.
 
+Implementation status (2026-08-27, local only — see veil-docs `VEIL_LOCAL_RUNTIME_STATUS_2026-08-27.md`):
+
+- Tx gossip is VTG2 Shamir + X25519. Fail-closed `t>=2`. Local committee is 2-of-3. One node key cannot open the envelope. Share announcements (`VTGS`) are wrapped to committee pubs.
+- Shared-key AES gossip (VTG1) is transport encryption only and MUST NOT be described as a private mempool.
+- Local single-node inclusion still uses plaintext `SubmitTx` from the order-router. That path is not production mode.
+- Order content uses `VEILENC1` envelopes; window keys are revealed on `RevealBatch`.
+
 ### 2.2 Shielded Ledger
 
 - Private state is represented by commitments and nullifiers.

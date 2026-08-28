@@ -40,6 +40,7 @@ function Stop-Stack {
   Get-Process avalanchego, veilvm-order-router, anvil -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
   Get-Process | Where-Object { $_.ProcessName -like "u9Ggveke*" } | Stop-Process -Force -ErrorAction SilentlyContinue
   Start-Sleep -Seconds 1
+  Remove-Item -Force -ErrorAction SilentlyContinue (Join-Path $PluginDir "$VmId.exe~")
 }
 
 if ($Restart) { Stop-Stack }
@@ -68,8 +69,32 @@ if (-not $healthy) {
   $cfgDir = Join-Path $Data "configs\chains\$($meta.chainID)"
   New-Item -ItemType Directory -Force -Path $cfgDir | Out-Null
   $vkJson = $Vk.Replace('\', '\\')
+  $GossipKeyFile = Join-Path $Local "tx-gossip.key"
+  if (-not (Test-Path $GossipKeyFile)) {
+    $bytes = New-Object byte[] 32
+    [System.Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($bytes)
+    (($bytes | ForEach-Object { $_.ToString("x2") }) -join "") | Set-Content $GossipKeyFile -Encoding ascii
+  }
+  $gossipKey = (Get-Content $GossipKeyFile -Raw).Trim()
+  $CommitteeDir = Join-Path $Local "tx-gossip-committee"
+  $CommitteeTool = Join-Path $Local "veilvm-gossip-committee.exe"
+  if (-not (Test-Path (Join-Path $CommitteeDir "committee.csv"))) {
+    if (-not (Test-Path $CommitteeTool)) { throw "missing $CommitteeTool" }
+    New-Item -ItemType Directory -Force -Path $CommitteeDir | Out-Null
+    & $CommitteeTool -n 3 -out $CommitteeDir
+    if ($LASTEXITCODE -ne 0) { throw "gossip committee keygen failed" }
+  }
+  $x25519 = (Get-Content (Join-Path $CommitteeDir "node0.priv") -Raw).Trim()
+  $committee = (Get-Content (Join-Path $CommitteeDir "committee.csv") -Raw).Trim()
   @"
 {
+  "vm": {
+    "txGossipEncryptionRequired": true,
+    "txGossipEncryptionKeyHex": "$gossipKey",
+    "txGossipThresholdMinShares": 2,
+    "txGossipThresholdNodePrivateKeyHex": "$x25519",
+    "txGossipThresholdCommitteePublicKeys": "$committee"
+  },
   "controller": {
     "enabled": true,
     "zk": {

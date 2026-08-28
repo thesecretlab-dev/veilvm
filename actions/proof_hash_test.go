@@ -26,13 +26,14 @@ func TestBuildShieldedLedgerPublicInputsPreimageLayout(t *testing.T) {
 		totalVolume = uint64(4096)
 	)
 
-	preimage := BuildShieldedLedgerPublicInputsPreimage(
+	in := DerivedShieldedLedgerPublicInputs(
 		marketID,
 		windowID,
 		clearPrice,
 		totalVolume,
 		fillsHash,
 	)
+	preimage := BuildShieldedLedgerPublicInputsPreimage(in)
 
 	domainLen := len(ShieldedLedgerInputsDomainTag)
 	marketOffset := domainLen
@@ -41,7 +42,11 @@ func TestBuildShieldedLedgerPublicInputsPreimageLayout(t *testing.T) {
 	totalVolumeOffset := clearPriceOffset + 8
 	fillsLenOffset := totalVolumeOffset + 8
 	fillsHashOffset := fillsLenOffset + 2
-	expectedLen := fillsHashOffset + ExpectedFillsHashSize
+	commitmentsOffset := fillsHashOffset + ExpectedFillsHashSize
+	nullifiersOffset := commitmentsOffset + ExpectedRootHashSize
+	prevRootOffset := nullifiersOffset + ExpectedRootHashSize
+	nextRootOffset := prevRootOffset + ExpectedRootHashSize
+	expectedLen := nextRootOffset + ExpectedRootHashSize
 
 	if len(preimage) != expectedLen {
 		t.Fatalf("unexpected preimage length: got=%d want=%d", len(preimage), expectedLen)
@@ -67,6 +72,21 @@ func TestBuildShieldedLedgerPublicInputsPreimageLayout(t *testing.T) {
 	if !bytes.Equal(preimage[fillsHashOffset:fillsHashOffset+ExpectedFillsHashSize], fillsHash) {
 		t.Fatalf("fills hash mismatch")
 	}
+	if !bytes.Equal(preimage[commitmentsOffset:nullifiersOffset], in.CommitmentsHash) {
+		t.Fatalf("commitments hash mismatch")
+	}
+	if !bytes.Equal(preimage[nullifiersOffset:prevRootOffset], in.NullifiersHash) {
+		t.Fatalf("nullifiers hash mismatch")
+	}
+	if !bytes.Equal(preimage[prevRootOffset:nextRootOffset], in.PrevStateRoot) {
+		t.Fatalf("prev state root mismatch")
+	}
+	if !bytes.Equal(preimage[nextRootOffset:nextRootOffset+ExpectedRootHashSize], in.NextStateRoot) {
+		t.Fatalf("next state root mismatch")
+	}
+	if bytes.Equal(in.CommitmentsHash, in.NullifiersHash) {
+		t.Fatalf("commitments and nullifiers hashes must be domain-separated")
+	}
 }
 
 func TestComputeShieldedLedgerPublicInputsHashMatchesCanonicalPreimage(t *testing.T) {
@@ -80,22 +100,22 @@ func TestComputeShieldedLedgerPublicInputsHashMatchesCanonicalPreimage(t *testin
 		fillsHash[i] = byte(i)
 	}
 
-	hash := ComputeShieldedLedgerPublicInputsHash(
+	in := DerivedShieldedLedgerPublicInputs(
 		marketID,
 		11,
 		2000,
 		6400,
 		fillsHash,
 	)
-	preimage := BuildShieldedLedgerPublicInputsPreimage(
-		marketID,
-		11,
-		2000,
-		6400,
-		fillsHash,
-	)
+	hash := ComputeShieldedLedgerPublicInputsHash(in)
+	preimage := BuildShieldedLedgerPublicInputsPreimage(in)
 	want := sha256.Sum256(preimage)
 	if hash != want {
 		t.Fatalf("hash mismatch")
+	}
+	mut := in
+	mut.NextStateRoot = taggedSHA256("VEIL_NEXT_ROOT_V1_TAMPER", mut.NextStateRoot)
+	if ComputeShieldedLedgerPublicInputsHash(mut) == hash {
+		t.Fatalf("state-root slot must bind the digest")
 	}
 }

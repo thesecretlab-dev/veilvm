@@ -141,11 +141,13 @@ func buildSampleShieldedPreimage(t *testing.T) []byte {
 		fillsHash[i] = byte(0xA0 + i)
 	}
 	preimage := actions.BuildShieldedLedgerPublicInputsPreimage(
-		marketID,
-		17,
-		2500,
-		7200,
-		fillsHash,
+		actions.DerivedShieldedLedgerPublicInputs(
+			marketID,
+			17,
+			2500,
+			7200,
+			fillsHash,
+		),
 	)
 	if len(preimage) != ShieldedLedgerPreimageLen {
 		t.Fatalf("unexpected preimage len: got=%d want=%d", len(preimage), ShieldedLedgerPreimageLen)

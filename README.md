@@ -10,10 +10,10 @@ ChainId `22207` Â· Built in Go Â· Avalanche L1
 
 EVM-based chains leak information. Order flow is visible in the mempool, trade sizes are public, and market manipulation is trivial. VeilVM solves this at the execution layer:
 
-- **Encrypted order commitments** â€” Orders are committed as hashes, revealed only during batch clearing
-- **Proof-gated settlement** â€” Batches clear only when a valid ZK proof is submitted and verified at consensus
-- **Shielded ledger** â€” Balance and position privacy via ZK-SNARK proofs (Groth16/PLONK, BN254)
-- **Native fee routing** â€” Protocol fees split across market-specific buyback (MSRB), chain-owned liquidity (COL), and operations
+- **Encrypted order commitments** — `VEILENC1` envelopes; window key revealed on `RevealBatch`
+- **Proof-gated settlement** — `ClearBatch` requires groth16 `shielded-ledger-v1` (digest-bound public slots, not in-circuit matching)
+- **Threshold tx gossip** — VTG2 Shamir + X25519, fail-closed `t>=2`. Local 2-of-3. Shared AES is not a private mempool.
+- **Native fee routing** — 70/20/10 MSRB / COL / ops, plus native VAI and AMM (actions 7–14)
 
 ## Actions
 
@@ -65,13 +65,7 @@ Prover                          VeilVM Consensus
 
 ## Companion EVM
 
-A parallel EVM chain hosts DeFi primitives that bridge to VeilVM:
-
-- **WVEIL** â€” Wrapped VEIL (ERC-20) via Teleporter bridge
-- **wsVEIL** â€” Rebase-wrapping staked VEIL (Olympus-style)
-- **VAI** â€” VEIL-native stablecoin
-- **Bond Vaults** â€” Discount VEIL acquisition via LP/DAI bonds
-- **Intent Gateways** â€” Cross-chain order and liquidity routing
+Companion EVM is **rails**, not a second protocol. v1 rails: WVEIL, intent gateways, bridge minter, test faucet. Native VAI/AMM/COL live only as VeilVM actions. Local Teleporter is a mock. Olympus / Maker / meme contracts in `veil-contracts` are parked.
 
 See [veil-contracts](https://github.com/thesecretlab-dev/veil-contracts) for the full Solidity suite.
 

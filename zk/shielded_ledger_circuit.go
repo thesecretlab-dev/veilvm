@@ -26,16 +26,20 @@ const (
 	ShieldedLedgerTotalVolOffset     = ShieldedLedgerClearPriceOffset + ShieldedLedgerClearPriceLen
 	ShieldedLedgerFillsHashLenOffset = ShieldedLedgerTotalVolOffset + ShieldedLedgerTotalVolLen
 	ShieldedLedgerFillsHashOffset    = ShieldedLedgerFillsHashLenOffset + ShieldedLedgerHashLenLen
+	ShieldedLedgerCommitmentsOffset  = ShieldedLedgerFillsHashOffset + actions.ExpectedFillsHashSize
+	ShieldedLedgerNullifiersOffset   = ShieldedLedgerCommitmentsOffset + actions.ExpectedRootHashSize
+	ShieldedLedgerPrevRootOffset     = ShieldedLedgerNullifiersOffset + actions.ExpectedRootHashSize
+	ShieldedLedgerNextRootOffset     = ShieldedLedgerPrevRootOffset + actions.ExpectedRootHashSize
 
-	ShieldedLedgerPreimageLen = ShieldedLedgerFillsHashOffset + actions.ExpectedFillsHashSize
+	ShieldedLedgerPreimageLen = ShieldedLedgerNextRootOffset + actions.ExpectedRootHashSize
 )
 
 // ShieldedLedgerCircuitV1 binds a domain-separated shielded-ledger preimage to
 // a public digest.
 //
-// This v1 path still uses digest binding, but it now enforces a canonical
-// shielded-ledger preimage shape (domain tag, fixed fills-hash length, and
-// non-zero critical fields) inside the circuit.
+// The preimage now includes fills, commitments, nullifiers, and prev/next
+// state-root slots. The circuit still SHA256-binds those public bytes; it does
+// not evaluate matching or merkle inclusion.
 type ShieldedLedgerCircuitV1 struct {
 	Preimage [ShieldedLedgerPreimageLen]uints.U8
 	Digest   [ShieldedLedgerDigestLen]uints.U8 `gnark:",public"`
@@ -83,7 +87,23 @@ func (c *ShieldedLedgerCircuitV1) Define(api frontend.API) error {
 	)
 	assertByteSliceNonZero(
 		api,
-		c.Preimage[ShieldedLedgerFillsHashOffset:ShieldedLedgerPreimageLen],
+		c.Preimage[ShieldedLedgerFillsHashOffset:ShieldedLedgerCommitmentsOffset],
+	)
+	assertByteSliceNonZero(
+		api,
+		c.Preimage[ShieldedLedgerCommitmentsOffset:ShieldedLedgerNullifiersOffset],
+	)
+	assertByteSliceNonZero(
+		api,
+		c.Preimage[ShieldedLedgerNullifiersOffset:ShieldedLedgerPrevRootOffset],
+	)
+	assertByteSliceNonZero(
+		api,
+		c.Preimage[ShieldedLedgerPrevRootOffset:ShieldedLedgerNextRootOffset],
+	)
+	assertByteSliceNonZero(
+		api,
+		c.Preimage[ShieldedLedgerNextRootOffset:ShieldedLedgerPreimageLen],
 	)
 
 	h.Write(c.Preimage[:])

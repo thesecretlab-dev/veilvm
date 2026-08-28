@@ -236,7 +236,9 @@ func buildSamplePreimage(circuitID string) ([]byte, []byte, error) {
 			return nil, nil, fmt.Errorf("invalid clear-hash sample preimage length: got=%d expected=%d", len(preimage), zk.ClearHashPreimageLen)
 		}
 	case mconsts.ProofCircuitShieldedLedgerV1:
-		preimage = actions.BuildShieldedLedgerPublicInputsPreimage(marketID, windowID, clearPrice, totalVolume, fills)
+		preimage = actions.BuildShieldedLedgerPublicInputsPreimage(
+			actions.DerivedShieldedLedgerPublicInputs(marketID, windowID, clearPrice, totalVolume, fills),
+		)
 		if len(preimage) != zk.ShieldedLedgerPreimageLen {
 			return nil, nil, fmt.Errorf("invalid shielded-ledger sample preimage length: got=%d expected=%d", len(preimage), zk.ShieldedLedgerPreimageLen)
 		}

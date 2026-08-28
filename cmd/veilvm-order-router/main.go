@@ -21,6 +21,7 @@ import (
 	"github.com/ava-labs/hypersdk/chain"
 	"github.com/ava-labs/hypersdk/crypto/ed25519"
 	"github.com/ava-labs/hypersdk/examples/veilvm/actions"
+	"github.com/ava-labs/hypersdk/examples/veilvm/zk"
 )
 
 const (
@@ -46,6 +47,12 @@ type router struct {
 	marketsFile string
 	core        *jsonrpc.JSONRPCClient
 	idx         *indexer.Client
+
+	windows        *windowKeys
+	batchWindowMs  int64
+	proverOnce     sync.Once
+	proverInst     *zk.Prover
+	proverErr      error
 }
 
 type intentReq struct {
@@ -124,13 +131,21 @@ func main() {
 		seen:        map[string]string{},
 		markets:     map[string]marketRec{},
 		marketsFile: envOr("ORDER_MARKETS_PATH", ""),
-		core:        jsonrpc.NewJSONRPCClient(base),
-		idx:         indexer.NewClient(base),
+		core:          jsonrpc.NewJSONRPCClient(base),
+		idx:           indexer.NewClient(base),
+		windows:       newWindowKeys(defaultWindowKeysPath()),
+		batchWindowMs: defaultBatchWindowMs,
 	}
 	r.loadMarkets()
+	r.warmProver()
 	mux := http.NewServeMux()
 	mux.HandleFunc("/health", func(w http.ResponseWriter, _ *http.Request) {
-		writeJSON(w, 200, map[string]any{"ok": true, "chainId": chainID, "markets": len(r.listMarkets())})
+		writeJSON(w, 200, map[string]any{
+			"ok":          true,
+			"chainId":     chainID,
+			"markets":     len(r.listMarkets()),
+			"proverReady": r.proverInst != nil,
+		})
 	})
 	mux.HandleFunc("/markets", r.handleMarkets)
 	mux.HandleFunc("/orders", r.wrap(r.handleUXOrder, false))
@@ -140,6 +155,10 @@ func main() {
 	mux.HandleFunc("/intents/native/liquidity/execute", r.wrap(r.handleLiq, false))
 	mux.HandleFunc("/native/create-market", r.wrap(r.handleCreateMarket, false))
 	mux.HandleFunc("/native/mint-vai", r.wrap(r.handleMintVAI, false))
+	mux.HandleFunc("/native/burn-vai", r.wrap(r.handleBurnVAI, false))
+	mux.HandleFunc("/native/route-fees", r.wrap(r.handleRouteFees, false))
+	mux.HandleFunc("/native/release-col", r.wrap(r.handleReleaseCOL, false))
+	mux.HandleFunc("/native/settle-batch", r.wrap(r.handleSettleBatch, false))
 	addr := envOr("ORDER_ROUTER_LISTEN", defaultListen)
 	log.Printf("veilvm-order-router listen=%s chain=%s actor=%s", addr, chainID, auth.NewED25519Address(priv.PublicKey()))
 	log.Fatal(http.ListenAndServe(addr, mux))
@@ -189,7 +208,7 @@ func (r *router) handleOrder(w http.ResponseWriter, req *http.Request) error {
 	}
 	windowID := in.WindowID
 	if windowID == 0 {
-		windowID = 1
+		windowID, _ = r.nextWindow(time.Now().UnixMilli())
 	}
 	txID, err := r.submit(req.Context(), "commit_order", &actions.CommitOrder{
 		MarketID:   marketID,
@@ -258,6 +277,60 @@ func (r *router) handleMintVAI(w http.ResponseWriter, req *http.Request) error {
 		copy(to[:], raw)
 	}
 	txID, err := r.submit(req.Context(), "mint_vai", &actions.MintVAI{To: to, Amount: in.Amount})
+	if err != nil {
+		return err
+	}
+	writeJSON(w, 200, reply{Accepted: true, VeilTxHash: txID})
+	return nil
+}
+
+func (r *router) handleBurnVAI(w http.ResponseWriter, req *http.Request) error {
+	var in struct {
+		Amount uint64 `json:"amount"`
+	}
+	if err := decodeJSON(req, &in); err != nil {
+		return err
+	}
+	if in.Amount == 0 {
+		return fmt.Errorf("amount required")
+	}
+	txID, err := r.submit(req.Context(), "burn_vai", &actions.BurnVAI{Amount: in.Amount})
+	if err != nil {
+		return err
+	}
+	writeJSON(w, 200, reply{Accepted: true, VeilTxHash: txID})
+	return nil
+}
+
+func (r *router) handleRouteFees(w http.ResponseWriter, req *http.Request) error {
+	var in struct {
+		Amount uint64 `json:"amount"`
+	}
+	if err := decodeJSON(req, &in); err != nil {
+		return err
+	}
+	if in.Amount == 0 {
+		return fmt.Errorf("amount required")
+	}
+	txID, err := r.submit(req.Context(), "route_fees", &actions.RouteFees{Amount: in.Amount})
+	if err != nil {
+		return err
+	}
+	writeJSON(w, 200, reply{Accepted: true, VeilTxHash: txID})
+	return nil
+}
+
+func (r *router) handleReleaseCOL(w http.ResponseWriter, req *http.Request) error {
+	var in struct {
+		Amount uint64 `json:"amount"`
+	}
+	if err := decodeJSON(req, &in); err != nil {
+		return err
+	}
+	if in.Amount == 0 {
+		return fmt.Errorf("amount required")
+	}
+	txID, err := r.submit(req.Context(), "release_col_tranche", &actions.ReleaseCOLTranche{Amount: in.Amount})
 	if err != nil {
 		return err
 	}

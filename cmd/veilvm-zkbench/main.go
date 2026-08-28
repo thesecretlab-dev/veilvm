@@ -822,20 +822,15 @@ func runBench(ctx context.Context, cfg benchConfig) (*benchReport, error) {
 			var preimage []byte
 			switch cfg.ProofCircuitID {
 			case mconsts.ProofCircuitShieldedLedgerV1:
-				publicInputsHash = actions.ComputeShieldedLedgerPublicInputsHash(
+				in := actions.DerivedShieldedLedgerPublicInputs(
 					marketID,
 					windowID,
 					clearPrice,
 					totalVolume,
 					fillsHash,
 				)
-				preimage = actions.BuildShieldedLedgerPublicInputsPreimage(
-					marketID,
-					windowID,
-					clearPrice,
-					totalVolume,
-					fillsHash,
-				)
+				publicInputsHash = actions.ComputeShieldedLedgerPublicInputsHash(in)
+				preimage = actions.BuildShieldedLedgerPublicInputsPreimage(in)
 			default:
 				publicInputsHash = actions.ComputeClearPublicInputsHash(
 					marketID,

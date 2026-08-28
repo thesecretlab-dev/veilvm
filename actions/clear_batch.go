@@ -54,6 +54,7 @@ func (t *ClearBatch) StateKeys(_ codec.Address, _ ids.ID) state.Keys {
 		string(storage.ProofConfigKey()):                       state.Read,
 		string(storage.BatchProofKey(t.MarketID, t.WindowID)):  state.Read,
 		string(storage.VellumProofKey(t.MarketID, t.WindowID)): state.Read,
+		string(storage.RevealCountKey(t.MarketID, t.WindowID)): state.Read,
 	}
 }
 
@@ -130,6 +131,14 @@ func (t *ClearBatch) Execute(
 	}
 	if status != storage.MarketStatusActive {
 		return nil, storage.ErrMarketNotActive
+	}
+
+	revealCount, err := storage.GetRevealShareCount(ctx, mu, t.MarketID, t.WindowID)
+	if err != nil {
+		return nil, err
+	}
+	if revealCount < storage.MinRevealShares {
+		return nil, storage.ErrRevealThresholdNotMet
 	}
 
 	proofCfg, err := storage.GetProofConfig(ctx, mu)
@@ -268,11 +277,13 @@ func computeExpectedPublicInputsHash(
 		), nil
 	case mconsts.ProofCircuitShieldedLedgerV1:
 		return ComputeShieldedLedgerPublicInputsHash(
-			marketID,
-			windowID,
-			clearPrice,
-			totalVolume,
-			fillsHash,
+			DerivedShieldedLedgerPublicInputs(
+				marketID,
+				windowID,
+				clearPrice,
+				totalVolume,
+				fillsHash,
+			),
 		), nil
 	default:
 		return [32]byte{}, storage.ErrUnsupportedProofCircuit
