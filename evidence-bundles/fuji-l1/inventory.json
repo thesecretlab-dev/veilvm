@@ -1,0 +1,46 @@
+{
+  "recordedAt": "2026-08-27T18:02:00Z",
+  "phase": "E",
+  "e01": "PASS",
+  "vmID": "u9GgvekeunSwK4TPF4jj7xLsW1LKkd1Uv9VQZo2SGfrwkejsK",
+  "operator": {
+    "pFuji": "P-fuji1pmarawpzwqudh20zzc9s8w7u5krqz2axjt4399",
+    "evm": "0x6C610253A7cE49e05068c7A538543EA5A523b85d",
+    "platformCliKey": "pchain-operator",
+    "pBalanceAVAX": "0.749995865"
+  },
+  "cChainGas": {
+    "evm": "0xb954f8190d7a11dc493c7559025b134238550315",
+    "cBalanceWei": "249000000000000000"
+  },
+  "genesisFuji": {
+    "file": "genesis-fuji.json",
+    "treasury": "0x003b2a6b6da4c679de4d696b909247bdeef4297445b4ea1e42fc92ab896e8a747e5d5271d7",
+    "proverAuthority": "0x00d95e8fa44926482a0e29cd861468a1c41d88b1688748deb1365ab36d102159b793aba151",
+    "networkID": 5,
+    "chainIDJSON": "11111111111111111111111111111111LpoYY",
+    "localGenesisUnchanged": true
+  },
+  "lostOwner": "0xB9a05AFC8eff7eE6a84889Bb9C88A89eAA2f96af",
+  "doNotDeployUnderLostOwner": true,
+  "toolchain": {
+    "localAvalanchego": "1.13.0 rpcchainvm=39",
+    "fujiPublic": "avalanchego/1.15.0 rpcProtocolVersion=46",
+    "winStorageTree": "1.15.0 protocol 46 but graft/coreth and graft/evm missing; ulimit has no windows files",
+    "avaLabsWindows": "unsupported since v1.13.2; WSL not installed on this PC",
+    "cannotRunFujiValidatorOnThisWindowsBox": true
+  },
+  "fujiIds": {
+    "subnetID": "KFm8vdnV7cmzqM9Yx7yFX5nCUsfsY9ZFtKhH47gngc6wVW6xC",
+    "chainID": "2gbjbV16mTeNYuYUgK2VeHNKUgj1B4f99KhbFJnoyTXXanbRxJ"
+  },
+  "gates": {
+    "E01_vmID": "PASS",
+    "E02_subnetCreate": "PASS",
+    "E03_chainCreate": "PASS",
+    "E04_validatorManager": "blocked: needs EVM manager + node",
+    "E05_convertToL1": "blocked: default 1 AVAX validator balance; P-Chain 0.749962309 AVAX; no node endpoint",
+    "E06_secondValidator": "blocked: this PC cannot run avalanchego 1.15; no child host this session",
+    "E07_publicRPC": "blocked: no Fuji-capable node"
+  }
+}

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/ava-labs/avalanchego/database"
 	"github.com/ava-labs/avalanchego/ids"
 	"github.com/ava-labs/avalanchego/utils/wrappers"
 
@@ -44,8 +45,9 @@ func (*RevealBatch) GetTypeID() uint8 {
 
 func (t *RevealBatch) StateKeys(_ codec.Address, _ ids.ID) state.Keys {
 	return state.Keys{
-		string(storage.MarketKey(t.MarketID)):                   state.Read,
-		string(storage.OracleKey(t.MarketID, t.ValidatorIndex)): state.All,
+		string(storage.MarketKey(t.MarketID)):                     state.Read,
+		string(storage.OracleKey(t.MarketID, t.ValidatorIndex)):   state.All,
+		string(storage.RevealCountKey(t.MarketID, t.WindowID)):    state.All,
 	}
 }
 
@@ -107,14 +109,24 @@ func (t *RevealBatch) Execute(
 		return nil, storage.ErrMarketNotActive
 	}
 
-	// TODO(M2): require oracle/committee authorization for reveal submissions.
-	// Store decryption share keyed by validator index
 	k := storage.OracleKey(t.MarketID, t.ValidatorIndex)
+	existing, getErr := mu.GetValue(ctx, k)
+	already := false
+	if getErr == nil && len(existing) >= 8 && binary.BigEndian.Uint64(existing[:8]) == t.WindowID {
+		already = true
+	} else if getErr != nil && !errors.Is(getErr, database.ErrNotFound) {
+		return nil, getErr
+	}
 	v := make([]byte, 0, 8+len(t.DecryptionShare))
 	v = binary.BigEndian.AppendUint64(v, t.WindowID)
 	v = append(v, t.DecryptionShare...)
 	if err := mu.Insert(ctx, k, v); err != nil {
 		return nil, err
+	}
+	if !already {
+		if _, err := storage.IncRevealShareCount(ctx, mu, t.MarketID, t.WindowID); err != nil {
+			return nil, err
+		}
 	}
 
 	result := &RevealBatchResult{ValidatorIndex: t.ValidatorIndex}

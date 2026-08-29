@@ -7,7 +7,7 @@ $svc = New-Object -ComObject Schedule.Service
 $svc.Connect()
 $folder = $svc.GetFolder("\")
 $task = $svc.NewTask(0)
-$task.RegistrationInfo.Description = "VEIL local genesis AvalancheGo + anvil rails + order-router"
+$task.RegistrationInfo.Description = "VEIL local stack ensure: avalanchego + anvil rails + router + frontend + mesh + tape. Idempotent; does not kill healthy processes."
 $task.Settings.Enabled = $true
 $task.Settings.Hidden = $true
 $task.Settings.AllowDemandStart = $true

@@ -1,0 +1,29 @@
+{
+  "recordedAt": "2026-08-27T18:05:00Z",
+  "network": "fuji",
+  "networkID": 5,
+  "E02": {
+    "status": "PASS",
+    "subnetID": "KFm8vdnV7cmzqM9Yx7yFX5nCUsfsY9ZFtKhH47gngc6wVW6xC",
+    "owner": "P-fuji1pmarawpzwqudh20zzc9s8w7u5krqz2axjt4399",
+    "threshold": 1,
+    "mcpLookup": "found=true after CreateChainTx"
+  },
+  "E03": {
+    "status": "PASS",
+    "chainID": "2gbjbV16mTeNYuYUgK2VeHNKUgj1B4f99KhbFJnoyTXXanbRxJ",
+    "name": "VEIL",
+    "vmID": "u9GgvekeunSwK4TPF4jj7xLsW1LKkd1Uv9VQZo2SGfrwkejsK",
+    "genesisFile": "genesis-fuji.json",
+    "genesisSHA256": "81DB272BF33E0215225197355353EC8B23F8DC31D1C3E4E8D9C0D1CC193B60C3",
+    "mcpLookup": "found=true",
+    "explorer": "https://explorer-test.avax.network/veil"
+  },
+  "E04": "NOT STARTED — validator manager is an EVM contract; VeilVM is HyperSDK; needs a manager chain + node",
+  "E05": "NOT STARTED — convert-to-l1 default 1 AVAX validator balance; P-Chain has 0.749962309 AVAX; no Fuji node endpoint",
+  "E06": "BLOCKED — this Windows box cannot run avalanchego 1.15 (Windows unsupported; local binary is 1.13.0 rpc 39 vs Fuji 1.15.0 rpc 46)",
+  "E07": "BLOCKED — no public Fuji RPC until a 1.15-capable node tracks the subnet",
+  "pBalanceAfter": "0.749962309 AVAX",
+  "localGenesisUnchanged": true,
+  "lostOwnerDoNotUse": "0xB9a05AFC8eff7eE6a84889Bb9C88A89eAA2f96af"
+}

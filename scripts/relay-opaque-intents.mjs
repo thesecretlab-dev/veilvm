@@ -172,16 +172,50 @@ async function relayLiq(mailbox, log) {
   return out;
 }
 
+function intentStatus(gw, intentId) {
+  if (!gw || !intentId) return -1;
+  const r = spawnSync(
+    CAST,
+    ['call', gw, 'getIntent(bytes32)(bytes32,bytes32,bytes32,uint64,uint8)', intentId, '--rpc-url', EVM_RPC],
+    { encoding: 'utf8' },
+  );
+  if (r.status !== 0) return -1;
+  const parts = (r.stdout || '').trim().split(/\s+/);
+  const last = parts[parts.length - 1];
+  const n = Number(last);
+  return Number.isFinite(n) ? n : -1;
+}
+
 async function once() {
   const mailbox = loadMailbox();
   let n = 0;
   for (const lg of await logs(ORDER_GW, ORDER_TOPIC)) {
-    await relayOrder(mailbox, lg);
-    n++;
+    const intentId = lg.topics[1];
+    if (intentStatus(ORDER_GW, intentId) === 2) continue;
+    try {
+      await relayOrder(mailbox, lg);
+      n++;
+    } catch (e) {
+      if (String(e.message || e).includes('mailbox miss')) {
+        console.warn(e.message || e);
+        continue;
+      }
+      throw e;
+    }
   }
   for (const lg of await logs(LIQ_GW, LIQ_TOPIC)) {
-    await relayLiq(mailbox, lg);
-    n++;
+    const intentId = lg.topics[1];
+    if (intentStatus(LIQ_GW, intentId) === 2) continue;
+    try {
+      await relayLiq(mailbox, lg);
+      n++;
+    } catch (e) {
+      if (String(e.message || e).includes('mailbox miss')) {
+        console.warn(e.message || e);
+        continue;
+      }
+      throw e;
+    }
   }
   console.log(`relayed ${n} intent(s)`);
   return n;

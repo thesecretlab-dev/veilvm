@@ -9,7 +9,7 @@ npm=11.17.0
 docker=MISSING (WSL optional component not installed; needs admin + reboot)
 forge=1.7.1 (C:\Users\Justin\tools\foundry)
 forge_build=PASS veil-contracts (fixed experimental import of VeilLinearVesting)
-platform-cli=FAIL on this host: avalanchego storage.AvailableBytes (Windows). Source C:\Users\Justin\src\platform-cli
+platform-cli=PASS (local). C:\Users\Justin\tools\platform-cli.exe version=dev. Windows AvailableBytes stub in C:\Users\Justin\src\avalanchego-win-storage. Rebuild: veilvm/scripts/rebuild-platform-cli.ps1. Not an Ava Labs upstream patch.
 veilvm_build=PASS go build ./...
 canonical_tag=veilvm-canonical-2026-08-24
 canonical_sha=b11da50dff9e95e91048d5bbff119e64e07c1bdb

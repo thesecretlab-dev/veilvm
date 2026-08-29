@@ -19,6 +19,7 @@ import (
 	"github.com/ava-labs/hypersdk/api/jsonrpc"
 	"github.com/ava-labs/hypersdk/auth"
 	"github.com/ava-labs/hypersdk/chain"
+	"github.com/ava-labs/hypersdk/codec"
 	"github.com/ava-labs/hypersdk/crypto/ed25519"
 	"github.com/ava-labs/hypersdk/examples/veilvm/actions"
 	"github.com/ava-labs/hypersdk/examples/veilvm/zk"
@@ -37,6 +38,7 @@ type router struct {
 	chainID     string
 	secret      string
 	factory     chain.AuthFactory
+	actor       codec.Address
 	minEnvelope int
 	requireEnv  bool
 	evmIngress  bool
@@ -125,6 +127,7 @@ func main() {
 		chainID:     chainID,
 		secret:      envOr("ORDER_ROUTER_RELAY_SECRET", defaultSecret),
 		factory:     auth.NewED25519Factory(priv),
+		actor:       auth.NewED25519Address(priv.PublicKey()),
 		minEnvelope: envInt("ORDER_ROUTER_MIN_OPAQUE_ENVELOPE_BYTES", minEnvelopeSize),
 		requireEnv:  envBool("ORDER_ROUTER_REQUIRE_OPAQUE_ENVELOPE", true),
 		evmIngress:  envBool("ORDER_ROUTER_ENABLE_EVM_INGRESS", true),
@@ -140,20 +143,16 @@ func main() {
 	r.warmProver()
 	mux := http.NewServeMux()
 	mux.HandleFunc("/health", func(w http.ResponseWriter, _ *http.Request) {
-		writeJSON(w, 200, map[string]any{
-			"ok":          true,
-			"chainId":     chainID,
-			"markets":     len(r.listMarkets()),
-			"proverReady": r.proverInst != nil,
-		})
+		r.writeHealth(w)
 	})
 	mux.HandleFunc("/markets", r.handleMarkets)
 	mux.HandleFunc("/orders", r.wrap(r.handleUXOrder, false))
-	mux.HandleFunc("/evm/intents/execute", r.wrap(r.handleOrder, true))
-	mux.HandleFunc("/evm/liquidity/execute", r.wrap(r.handleLiq, true))
+	mux.HandleFunc("/evm/intents/execute", r.wrap(r.handleOrderEVM, true))
+	mux.HandleFunc("/evm/liquidity/execute", r.wrap(r.handleLiqEVM, true))
 	mux.HandleFunc("/intents/native/execute", r.wrap(r.handleOrder, false))
 	mux.HandleFunc("/intents/native/liquidity/execute", r.wrap(r.handleLiq, false))
 	mux.HandleFunc("/native/create-market", r.wrap(r.handleCreateMarket, false))
+	mux.HandleFunc("/native/faucet", r.wrap(r.handleFaucet, false))
 	mux.HandleFunc("/native/mint-vai", r.wrap(r.handleMintVAI, false))
 	mux.HandleFunc("/native/burn-vai", r.wrap(r.handleBurnVAI, false))
 	mux.HandleFunc("/native/route-fees", r.wrap(r.handleRouteFees, false))
@@ -185,11 +184,39 @@ func (r *router) wrap(fn func(http.ResponseWriter, *http.Request) error, evm boo
 	}
 }
 
+func requireEVMIngress(intentID, sourceTxHash, nullifier string) error {
+	if strings.TrimSpace(sourceTxHash) == "" {
+		return fmt.Errorf("evm ingress requires sourceTxHash from companion submitIntent")
+	}
+	if strings.TrimSpace(intentID) == "" {
+		return fmt.Errorf("evm ingress requires intentId")
+	}
+	if strings.TrimSpace(nullifier) == "" {
+		return fmt.Errorf("evm ingress requires nullifier")
+	}
+	return nil
+}
+
+func (r *router) handleOrderEVM(w http.ResponseWriter, req *http.Request) error {
+	var in intentReq
+	if err := decodeJSON(req, &in); err != nil {
+		return err
+	}
+	if err := requireEVMIngress(in.IntentID, in.SourceTxHash, in.Nullifier); err != nil {
+		return err
+	}
+	return r.commitIntent(w, req, in)
+}
+
 func (r *router) handleOrder(w http.ResponseWriter, req *http.Request) error {
 	var in intentReq
 	if err := decodeJSON(req, &in); err != nil {
 		return err
 	}
+	return r.commitIntent(w, req, in)
+}
+
+func (r *router) commitIntent(w http.ResponseWriter, req *http.Request, in intentReq) error {
 	if err := checkRouting(in.MarketType, in.RoutingFeeBps); err != nil {
 		return err
 	}
@@ -224,11 +251,26 @@ func (r *router) handleOrder(w http.ResponseWriter, req *http.Request) error {
 	return nil
 }
 
+func (r *router) handleLiqEVM(w http.ResponseWriter, req *http.Request) error {
+	var in liqReq
+	if err := decodeJSON(req, &in); err != nil {
+		return err
+	}
+	if err := requireEVMIngress(in.IntentID, in.SourceTxHash, in.Nullifier); err != nil {
+		return err
+	}
+	return r.execLiq(w, req, in)
+}
+
 func (r *router) handleLiq(w http.ResponseWriter, req *http.Request) error {
 	var in liqReq
 	if err := decodeJSON(req, &in); err != nil {
 		return err
 	}
+	return r.execLiq(w, req, in)
+}
+
+func (r *router) execLiq(w http.ResponseWriter, req *http.Request, in liqReq) error {
 	if r.requireEnv {
 		if _, err := r.checkEnvelope(in.Envelope, in.Commitment); err != nil {
 			return err
@@ -396,12 +438,17 @@ func (r *router) submit(ctx context.Context, name string, action chain.Action) (
 	if err != nil {
 		return "", fmt.Errorf("unitPrices: %w", err)
 	}
+	// Lock only what a local tx actually needs. The old 10_000× / 100_000 floor
+	// drained the genesis actor (MaxFee is reserved in full at submit).
 	maxFee := uint64(0)
 	for i := 0; i < len(unitPrices); i++ {
-		maxFee += unitPrices[i] * 10000
+		maxFee += unitPrices[i] * 48
 	}
-	if maxFee < 100000 {
-		maxFee = 100000
+	if maxFee < 2_000 {
+		maxFee = 2_000
+	}
+	if maxFee > 20_000 {
+		maxFee = 20_000
 	}
 	expiry := ts + 60_000
 	expiry = (expiry / 1000) * 1000

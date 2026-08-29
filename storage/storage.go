@@ -42,6 +42,7 @@ const (
 	vellumProofPrefix     byte = metadata.DefaultMinimumPrefix + 18
 	bloodswornPrefix      byte = metadata.DefaultMinimumPrefix + 19
 	glyphPrefix           byte = metadata.DefaultMinimumPrefix + 20
+	revealCountPrefix     byte = metadata.DefaultMinimumPrefix + 21
 )
 
 const (
@@ -66,7 +67,10 @@ const (
 	VellumProofChunks     uint16 = 128
 	BloodswornChunks      uint16 = 4
 	GlyphChunks           uint16 = 16
+	RevealCountChunks     uint16 = 1
 )
+
+const MinRevealShares uint64 = 1
 
 const (
 	bipsDenominator     uint64 = 10_000
@@ -365,6 +369,47 @@ func OracleKey(marketID ids.ID, validatorIndex uint32) (k []byte) {
 
 func DisputeKey(marketID ids.ID) (k []byte) {
 	return OracleKey(marketID, 0xFFFFFFFF)
+}
+
+func RevealCountKey(marketID ids.ID, windowID uint64) (k []byte) {
+	k = make([]byte, 1+ids.IDLen+8+consts.Uint16Len)
+	k[0] = revealCountPrefix
+	copy(k[1:], marketID[:])
+	binary.BigEndian.PutUint64(k[1+ids.IDLen:], windowID)
+	binary.BigEndian.PutUint16(k[1+ids.IDLen+8:], RevealCountChunks)
+	return
+}
+
+func GetRevealShareCount(ctx context.Context, im state.Immutable, marketID ids.ID, windowID uint64) (uint64, error) {
+	v, err := im.GetValue(ctx, RevealCountKey(marketID, windowID))
+	if errors.Is(err, database.ErrNotFound) {
+		return 0, nil
+	}
+	if err != nil {
+		return 0, err
+	}
+	if len(v) < 8 {
+		return 0, fmt.Errorf("invalid reveal count length: %d", len(v))
+	}
+	return binary.BigEndian.Uint64(v[:8]), nil
+}
+
+func PutRevealShareCount(ctx context.Context, mu state.Mutable, marketID ids.ID, windowID uint64, count uint64) error {
+	v := make([]byte, 8)
+	binary.BigEndian.PutUint64(v, count)
+	return mu.Insert(ctx, RevealCountKey(marketID, windowID), v)
+}
+
+func IncRevealShareCount(ctx context.Context, mu state.Mutable, marketID ids.ID, windowID uint64) (uint64, error) {
+	n, err := GetRevealShareCount(ctx, mu, marketID, windowID)
+	if err != nil {
+		return 0, err
+	}
+	n++
+	if err := PutRevealShareCount(ctx, mu, marketID, windowID, n); err != nil {
+		return 0, err
+	}
+	return n, nil
 }
 
 func PutDispute(ctx context.Context, mu state.Mutable, marketID ids.ID, bond uint64, evidence []byte) error {

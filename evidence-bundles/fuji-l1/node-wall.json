@@ -1,0 +1,31 @@
+{
+  "recordedAt": "2026-08-27T18:25:00Z",
+  "fujiStillOnPChain": {
+    "subnetID": "KFm8vdnV7cmzqM9Yx7yFX5nCUsfsY9ZFtKhH47gngc6wVW6xC",
+    "chainID": "2gbjbV16mTeNYuYUgK2VeHNKUgj1B4f99KhbFJnoyTXXanbRxJ",
+    "vmID": "u9GgvekeunSwK4TPF4jj7xLsW1LKkd1Uv9VQZo2SGfrwkejsK"
+  },
+  "attempted": [
+    "cloned ava-labs/avalanchego v1.15.0-fuji (rpcchainvm 46, grafts present)",
+    "added Windows stubs: utils/storage, utils/ulimit, x/blockdb flock",
+    "avalanchego compile reached link; failed -lfirewood_ffi (no Windows .a, only linux/darwin)",
+    "wsl --install Ubuntu: WSL2 cannot start, Hyper-V / Virtual Machine Platform not installed",
+    "veilvm plugin vs 1.15: avalanchego/x/sync removed (now database/merkle/sync); HyperSDK archived on avalanchego 1.13"
+  ],
+  "localStackUntouched": {
+    "avalanchego": "1.13.0 rpcchainvm=39",
+    "plugin": "rpc 39",
+    "genesis.json": "unchanged"
+  },
+  "cannotOnThisWindowsBoxWithout": [
+    "enable Virtual Machine Platform + reboot, then WSL Ubuntu + linux avalanchego 1.15.0-fuji",
+    "or a Linux child host",
+    "and a HyperSDK port: x/sync -> database/merkle/sync plus rpcchainvm 46"
+  ],
+  "didNot": [
+    "enable Hyper-V / reboot",
+    "convert-to-l1",
+    "touch mainnet",
+    "overwrite local 1.13 avalanchego.exe or plugin"
+  ]
+}

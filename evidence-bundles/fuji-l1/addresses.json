@@ -1,0 +1,14 @@
+{
+  "chainIDJSON": "11111111111111111111111111111111LpoYY",
+  "chainIDJSONNote": "ids.Empty placeholder; Factory.Load overwrites from avalanchego chain context. Same CB58 as Primary Network ID. Not a claim that VEIL is Primary.",
+  "doNotUse": "0xB9a05AFC8eff7eE6a84889Bb9C88A89eAA2f96af",
+  "genesisFile": "genesis-fuji.json",
+  "genesisTreasury": "0x003b2a6b6da4c679de4d696b909247bdeef4297445b4ea1e42fc92ab896e8a747e5d5271d7",
+  "localGenesisLeft": "genesis.json unchanged (local stack)",
+  "lostOwner": "do-not-deploy-under",
+  "network": "fuji",
+  "networkID": 5,
+  "proverAuthority": "0x00d95e8fa44926482a0e29cd861468a1c41d88b1688748deb1365ab36d102159b793aba151",
+  "treasuryCreated": true,
+  "vmID": "u9GgvekeunSwK4TPF4jj7xLsW1LKkd1Uv9VQZo2SGfrwkejsK"
+}

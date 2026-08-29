@@ -1,0 +1,9 @@
+network=fuji
+vmID=u9GgvekeunSwK4TPF4jj7xLsW1LKkd1Uv9VQZo2SGfrwkejsK
+subnetID=KFm8vdnV7cmzqM9Yx7yFX5nCUsfsY9ZFtKhH47gngc6wVW6xC
+chainID=2gbjbV16mTeNYuYUgK2VeHNKUgj1B4f99KhbFJnoyTXXanbRxJ
+operator=P-fuji1pmarawpzwqudh20zzc9s8w7u5krqz2axjt4399
+genesis=genesis-fuji.json
+genesisSHA256=81DB272BF33E0215225197355353EC8B23F8DC31D1C3E4E8D9C0D1CC193B60C3
+explorerChain=https://explorer-test.avax.network/veil
+explorerSubnet=https://explorer-test.avax.network/subnets/KFm8vdnV7cmzqM9Yx7yFX5nCUsfsY9ZFtKhH47gngc6wVW6xC

@@ -54,6 +54,7 @@ var (
 	ErrProofPublicInputsMismatch = errors.New("proof public inputs mismatch")
 	ErrProofVerifierUnavailable  = errors.New("proof verifier unavailable")
 	ErrProofVerificationFailed   = errors.New("proof verification failed")
+	ErrRevealThresholdNotMet     = errors.New("reveal share threshold not met")
 	ErrVellumProofNotFound       = errors.New("vellum proof not found")
 	ErrInvalidVellumProof        = errors.New("invalid vellum proof")
 	ErrInvalidBloodsworn         = errors.New("invalid bloodsworn")

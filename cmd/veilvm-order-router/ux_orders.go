@@ -65,7 +65,7 @@ func (r *router) handleUXOrder(w http.ResponseWriter, req *http.Request) error {
 		writeJSON(w, 501, map[string]any{
 			"accepted":           false,
 			"status":             "passthrough_only",
-			"message":            "Polymarket/Polygon is catalog-only. Settlement is VeilVM native, or trade on Polymarket.",
+			"message":            "Hit the frontend /api/orders polygon route. This Go router does not post CLOB orders. Local settlement is companion PolymarketVenue; live CLOB needs POLYMARKET_CLOB_LIVE=1.",
 			"errorCode":          "POLYGON_PASSTHROUGH_CATALOG_ONLY",
 			"nativeNetwork":      "polygon",
 			"settlementNetwork":  "polygon",

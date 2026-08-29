@@ -1,0 +1,11 @@
+vmID=u9GgvekeunSwK4TPF4jj7xLsW1LKkd1Uv9VQZo2SGfrwkejsK
+derivedFrom=name:veilvm
+method=consts.ID = ids.ToID(bytes("veilvm") padded to 32)
+recordedAt=2026-08-27T17:59:27Z
+gitHEAD=11aa8e3
+canonicalTag=veilvm-canonical-2026-08-24
+canonicalTagSHA=05943c7f02e41304053f76fe642986cc1019745a
+localPluginSHA256=F5C990DA3C6A17D2A11A2DC739EB512285331455DF2432D11AA1EF887A27606A
+localAvalanchego=1.13.0 rpcchainvm=39
+fujiPublic=avalanchego/1.15.0 rpcProtocolVersion=46
+note=VM ID is from the name veilvm, not git SHA. Fuji node needs plugin built for rpcchainvm 46.

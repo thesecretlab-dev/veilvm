@@ -35,6 +35,13 @@
       "role": "prover-authority",
       "kind": "ed25519",
       "publicKeyHex": "0b0f54b0a8a00d8ede281b07931e272d422bc9a23adafe675cbb59770dbe5ac5"
+    },
+    {
+      "role": "btc-seed-funds",
+      "kind": "bitcoin-p2wpkh",
+      "network": "bitcoin-mainnet",
+      "address": "bc1qvl34v5qda2v2mj9jpg37makn7qvc3mmagv0uvu",
+      "derivation": "m/84'/0'/0'/0/0"
     }
   ]
 }

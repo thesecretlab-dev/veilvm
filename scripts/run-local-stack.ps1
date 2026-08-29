@@ -181,11 +181,18 @@ if ($n -lt 1) {
 }
 $relayUp = $false
 try {
-  Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object { $_.CommandLine -match "relay-opaque-intents" } | Out-Null
+  $relayUp = [bool](Get-CimInstance Win32_Process -Filter "Name = 'node.exe'" -ErrorAction SilentlyContinue |
+    Where-Object { $_.CommandLine -match "relay-opaque-intents" } |
+    Select-Object -First 1)
 } catch {}
-Write-Host "starting opaque relayer (watch)"
-Start-Process -FilePath (Join-Path $NodeDir "node.exe") -WorkingDirectory $PSScriptRoot -ArgumentList @("relay-opaque-intents.mjs","--watch") -WindowStyle Hidden
+if ($relayUp) {
+  Write-Host "opaque relayer already running"
+} else {
+  Write-Host "starting opaque relayer (watch)"
+  Start-Process -FilePath (Join-Path $NodeDir "node.exe") -WorkingDirectory $PSScriptRoot -ArgumentList @("relay-opaque-intents.mjs","--watch") -WindowStyle Hidden
+}
 Write-Host "stack up: veilvm :9660  anvil :8545  router :9098  rails persisted  relayer watch"
+Write-Host "daily owner is Task Scheduler VEIL-local-genesis-node (scripts\start-local-daemon.ps1), not this test launcher"
 Write-Host "native UX: POST /orders  GET /markets  (frontend VEIL_ORDER_API_BASE=http://127.0.0.1:9098)"
 if ($SkipTests) { return }
 

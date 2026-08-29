@@ -33,9 +33,9 @@ func (*SwapExactIn) GetTypeID() uint8 {
 
 func (a *SwapExactIn) StateKeys(actor codec.Address, _ ids.ID) state.Keys {
 	return state.Keys{
-		string(storage.BalanceKey(actor)):              state.Read | state.Write,
+		string(storage.BalanceKey(actor)):              state.All,
 		string(storage.VAIBalanceKey(actor)):           state.All,
-		string(storage.PoolKey(a.AssetIn, a.AssetOut)): state.Read | state.Write,
+		string(storage.PoolKey(a.AssetIn, a.AssetOut)): state.All,
 	}
 }
 

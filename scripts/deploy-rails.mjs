@@ -109,6 +109,27 @@ const bridge = await ensure("bridgeMinterContract", prev.bridgeMinterContract, (
     "3600",
   ]),
 );
+const multicall3 = await ensure("multicall3", prev.multicall3, () =>
+  deploy("contracts/experimental/Multicall3.sol:Multicall3"),
+);
+const zeroidRegistry = await ensure("zeroidRegistry", prev.zeroidRegistry, () =>
+  deploy("contracts/identity/ZeroIdRegistry.sol:ZeroIdRegistry"),
+);
+const polymarketVenue = await ensure("polymarketVenue", prev.polymarketVenue, () =>
+  deploy("contracts/markets/PolymarketVenue.sol:PolymarketVenue"),
+);
+
+async function ensureFaucetFunded(addr) {
+  const bal = BigInt(await rpc("eth_getBalance", [addr, "latest"]));
+  const min = 50n * 10n ** 18n;
+  if (bal >= min) {
+    console.log(`keep faucet ETH ${addr}`);
+    return;
+  }
+  run(CAST, ["send", addr, "--value", "100ether", "--rpc-url", EVM_RPC, "--private-key", PK]);
+  console.log(`fund faucet ${addr} +100 ETH`);
+}
+await ensureFaucetFunded(faucet);
 
 const doc = {
   network: "local-anvil",
@@ -134,8 +155,10 @@ const doc = {
   orderIntentGateway: orderGw,
   liquidityIntentGateway: liqGw,
   feeConfigManager: "",
-  multicall3: "",
+  multicall3,
   faucet,
+  zeroidRegistry,
+  polymarketVenue,
   deployedBy: owner,
   deployedAt: new Date().toISOString(),
   notes:
@@ -144,4 +167,10 @@ const doc = {
 
 writeFileSync(outFile, JSON.stringify(doc, null, 2) + "\n");
 console.log(`wrote ${outFile}`);
-console.log(JSON.stringify({ wveil, faucet, orderGw, liqGw, teleporter, bridge }, null, 2));
+console.log(
+  JSON.stringify(
+    { wveil, faucet, orderGw, liqGw, teleporter, bridge, multicall3, zeroidRegistry, polymarketVenue },
+    null,
+    2,
+  ),
+);
