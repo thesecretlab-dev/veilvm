@@ -14,11 +14,11 @@ $Router = Join-Path $Local "veilvm-order-router.exe"
 $Vk = Join-Path $Root "zk-fixture-new\groth16_shielded_ledger_vk.bin"
 $VmId = "u9GgvekeunSwK4TPF4jj7xLsW1LKkd1Uv9VQZo2SGfrwkejsK"
 $ChainFile = Join-Path $Local "local-chain.json"
-$Foundry = "C:\Users\Justin\tools\foundry"
+$Foundry = if ($env:FOUNDRY_DIR) { $env:FOUNDRY_DIR } else { Join-Path $env:USERPROFILE "tools\foundry" }
 $NodeDir = "C:\Program Files\nodejs"
 $Anvil = Join-Path $Foundry "anvil.exe"
 $NodeExe = Join-Path $NodeDir "node.exe"
-$Frontend = "C:\Users\Justin\src\veil\veil-frontend"
+$Frontend = if ($env:VEIL_FRONTEND) { $env:VEIL_FRONTEND } else { Join-Path $env:USERPROFILE "src\veil\veil-frontend" }
 $NextCmd = Join-Path $Frontend "node_modules\.bin\next.cmd"
 $env:Path = "$Foundry;$NodeDir;$env:Path"
 
@@ -233,6 +233,9 @@ try {
   $rails = Get-Content $addrFile -Raw | ConvertFrom-Json
 
   $env:ORDER_CHAIN_ID = $meta.chainID
+  $env:VEIL_CHAIN_ID = $meta.chainID
+  $env:NEXT_PUBLIC_VEIL_CHAIN_ID = $meta.chainID
+  $env:VEIL_NODE_URL = "http://127.0.0.1:9660"
   $env:ORDER_NODE_URL = "http://127.0.0.1:9660"
   $env:ORDER_ROUTER_RELAY_SECRET = "local-dev-secret"
   $env:ORDER_MARKETS_PATH = Join-Path $Local "native-markets.json"

@@ -13,7 +13,9 @@
  * Uses the pre-funded ewoq key on local networks.
  * Requires @avalabs/avalanchejs ^4.2.0
  */
-import { readFileSync } from 'fs';
+import { readFileSync, writeFileSync, mkdirSync } from 'fs';
+import { dirname, resolve } from 'path';
+import { fileURLToPath } from 'url';
 import { Context, pvm, utils, addTxSignatures, secp256k1 } from '@avalabs/avalanchejs';
 
 const NODE_URL = process.env.NODE_URL || 'http://127.0.0.1:9660';
@@ -356,6 +358,22 @@ async function main() {
   console.log(`    curl -s -X POST ${NODE_URL}/ext/bc/${chainID}/rpc \\`);
   console.log(`      -H 'content-type: application/json' \\`);
   console.log(`      -d '{"jsonrpc":"2.0","id":1,"method":"veilapi.ping","params":{}}'`);
+
+  const localDir = resolve(dirname(fileURLToPath(import.meta.url)), '../.local');
+  mkdirSync(localDir, { recursive: true });
+  const meta = {
+    networkId: 'local',
+    http: NODE_URL,
+    nodeID,
+    subnetID,
+    chainID,
+    rpc: `${NODE_URL}/ext/bc/${chainID}/rpc`,
+    veilapi: `${NODE_URL}/ext/bc/${chainID}/veilapi`,
+    circuit: 'shielded-ledger-v1',
+    createdAt: new Date().toISOString(),
+  };
+  writeFileSync(resolve(localDir, 'local-chain.json'), JSON.stringify(meta, null, 2) + '\n');
+  console.log(`  wrote ${resolve(localDir, 'local-chain.json')}`);
 }
 
 main().catch(e => { console.error('✗', e.message || e); process.exit(1); });
